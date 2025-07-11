@@ -1,0 +1,13 @@
+{
+  "name": "dion-runtime-configs",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./typescript.json": "./typescript.json",
+    "./biome.json": "./biome.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "dion-runtime-lib",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/main.ts",
+    "./*": "./src/*",
+    "./asserts": "./src/asserts.ts",
+    "./settings": "./src/settings.ts",
+    "./ui": "./src/ui.ts",
+    "./util": "./src/util.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "dion-runtime-types": "catalog:",
+    "dion-runtime-configs": "catalog:"
+  },
+  "private": true
+}

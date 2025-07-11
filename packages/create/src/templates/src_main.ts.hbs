@@ -1,0 +1,57 @@
+/// <reference types="dion-runtime-types" />
+import { Extension } from "dion-runtime-lib";
+import { assert } from "dion-runtime-lib/asserts.js";
+import { ExtensionSetting, SettingStore } from "dion-runtime-lib/settings.js";
+import { fetch } from "network";
+import { parse_html } from "parse";
+
+export default class extends Extension {
+  settings = {
+    example: new ExtensionSetting("example", "hello", "Extension"),
+  };
+
+  async browse(_page: number, _sort: Sort): Promise<Entry[]> {
+    return [
+      {
+        id: "example",
+        url: "https://example.com",
+        title: `Hello ${await this.settings.example.get()}`,
+        media_type: "Unknown",
+      },
+    ];
+  }
+
+  async search(_page: number, _filter: string): Promise<Entry[]> {
+    return [];
+  }
+
+  async detail(entryid: string, settings: { [key: string]: Setting }): Promise<EntryDetailed> {
+    const sstore = new SettingStore(settings);
+    sstore.getOrDefine("media", "par");
+    return {
+      id: entryid,
+      url: "https://example.com",
+      title: "Example",
+      media_type: "Unknown",
+      description: "Scaffolded extension",
+      status: "Unknown",
+      language: "en",
+      settings: sstore.toMap(),
+      episodes: [{ name: "Example", id: "ex1", url: "https://example.com" }],
+    };
+  }
+
+  async source(_epid: string, _settings: { [key: string]: Setting }): Promise<Source> {
+    const res = await fetch("https://www.example.com/");
+    assert(res.ok, "Failed to fetch");
+    const text = await res.body;
+    const doc = parse_html(text);
+    return {
+      sourcetype: "Data",
+      sourcedata: {
+        type: "Paragraphlist",
+        paragraphs: [doc.select("h1").text, "Hello World"],
+      },
+    };
+  }
+}
