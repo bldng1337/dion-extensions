@@ -1,4 +1,4 @@
 {
-  "extends": "dion-runtime-configs/typescript.json",
-  "include": ["src/**/*"]
+	"extends": "dion-runtime-configs/typescript.json",
+	"include": ["src/**/*"]
 }

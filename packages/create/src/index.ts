@@ -173,11 +173,10 @@ async function main() {
 		.filter(Boolean);
 
 	const outDir = path.resolve("extensions", slug);
-	try {
-		await fs.access(outDir);
+	if (await fs.exists(outDir)) {
 		console.error(`Directory already exists: ${outDir}`);
 		process.exit(1);
-	} catch {}
+	}
 
 	const pkgTpl = await loadTemplate("package.json");
 	const tsTpl = await loadTemplate("tsconfig.json");
