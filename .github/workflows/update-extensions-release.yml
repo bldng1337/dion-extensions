@@ -24,7 +24,10 @@ jobs:
       - name: Install dependencies
         run: |
           bun install
-          
+
+      - name: print packages
+        run: bun pm ls
+
       - name: Build scripts
         run: bunx turbo run build
 
