@@ -6,8 +6,13 @@
       "devDependencies": {
         "@biomejs/biome": "2.1.1",
         "@types/bun": "^1.2.19",
+        "dion-create": "workspace:*",
         "dion-node-runtime": "0.5.0",
+        "dion-repo-scripts": "workspace:*",
+        "dion-runtime-configs": "workspace:*",
+        "dion-runtime-lib": "workspace:*",
         "dion-runtime-types": "0.14.1",
+        "dion-test-asserts": "workspace:*",
         "turbo": "^2.5.4",
         "typescript": "^5.8.3",
       },
