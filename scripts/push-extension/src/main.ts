@@ -58,4 +58,7 @@ if (extension === undefined) {
 	process.exit(1);
 }
 
-fs.copyFileSync(path.join(values.input, extension), path.join(extpath, extension));
+fs.copyFileSync(
+	path.join(values.input, extension),
+	path.join(extpath, extension),
+);
