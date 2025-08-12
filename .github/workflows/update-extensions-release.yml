@@ -31,6 +31,12 @@ jobs:
       - name: build scripts
         run: bunx turbo run build --filter dion*
 
+      - name: update scripts
+        run: |
+          bun update dion-build-index
+          bun update dion-bundle-extension
+          bun update dion-push-extension
+
       - name: Build all extensions
         run: bunx turbo run build
 
