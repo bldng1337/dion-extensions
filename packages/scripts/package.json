@@ -5,14 +5,15 @@
 	"private": true,
 	"bin": {
 		"dion-bundle": "./.dist/bundle_bun.js",
-		"dion-push": "./.dist/push.js"
+		"dion-push": "./.dist/push.js",
+		"dion-index-build": "./.dist/action_build.js"
 	},
 	"exports": {
 		"./*": "./.dist/*"
 	},
 	"scripts": {
 		"check-types": "bunx tsc -p tsconfig.json",
-		"build": "bun run ./build.ts",
+		"build-scripts": "bun run ./build.ts",
 		"lint": "bunx biome check",
 		"format": "bunx biome format --write"
 	},

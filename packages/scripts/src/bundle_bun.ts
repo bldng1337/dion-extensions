@@ -3,12 +3,12 @@ import fs from "node:fs/promises";
 /// <reference types="dion-runtime-types" />
 /// <reference types="bun" />
 import { $, file } from "bun";
-import type { ExtensionData } from "dion-runtime-types/src/generated/RuntimeTypes.js";
 import {
 	type ExtensionRepo,
 	extensionsSchema,
 	parseFile,
 	repoSchema,
+	toExtensionData,
 } from "./utils.ts";
 
 async function tryFetchGitUrl(
@@ -50,7 +50,6 @@ async function build(): Promise<string> {
 		console.error("No outputs found");
 		process.exit(1);
 	}
-	// biome-ignore lint/style/noNonNullAssertion: its checked above
 	return res.outputs[0]!.text();
 }
 
@@ -69,13 +68,8 @@ async function main() {
 		build(),
 		remakeDist(),
 	]);
-	const extdata: ExtensionData = {
-		...pkg,
-		repo: repo.name,
-		giturl: gitUrl,
-	};
-	file(`./.dist/${extdata.name}.dion.js`).write(
-		`//${JSON.stringify(extdata)}\n${source}`,
+	file(`./.dist/${pkg.name}.dion.js`).write(
+		`//${JSON.stringify(toExtensionData(pkg, repo.name, gitUrl))}\n${source}`,
 	);
 }
 main();

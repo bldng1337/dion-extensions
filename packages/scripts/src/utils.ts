@@ -1,7 +1,6 @@
 /// <reference types="dion-runtime-types" />
 /// <reference types="bun" />
 import { file } from "bun";
-import type { MediaType } from "dion-runtime-types/src/generated/RuntimeTypes.js";
 import type { BaseIssue, BaseSchema, InferOutput } from "valibot";
 import * as v from "valibot";
 
@@ -25,12 +24,16 @@ export async function parseFile<
 
 export const repoSchema = v.object({
 	name: v.string(),
+	id: v.string(),
+	icon: v.string(),
+	description: v.optional(v.string()),
 	repository: v.optional(
 		v.object({
 			url: v.optional(v.string()),
 		}),
 	),
 });
+
 export type ExtensionRepo = InferOutput<typeof repoSchema>;
 
 export const mediatypes: MediaType[] = [
@@ -56,3 +59,15 @@ export const extensionsSchema = v.object({
 	author: v.string(),
 	license: v.string(),
 });
+
+export function toExtensionData(
+	extension_json: InferOutput<typeof extensionsSchema>,
+	repo?: string,
+	giturl?: string,
+): ExtensionData {
+	return {
+		...extension_json,
+		repo: repo,
+		giturl: giturl,
+	};
+}
