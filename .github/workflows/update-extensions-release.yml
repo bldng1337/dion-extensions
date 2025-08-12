@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           bun install --frozen-lockfile
+          
+      - name: Build scripts
+        run: bunx turbo run build
 
       - name: Build index
         run: |
