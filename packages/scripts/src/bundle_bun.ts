@@ -50,7 +50,11 @@ async function build(): Promise<string> {
 		console.error("No outputs found");
 		process.exit(1);
 	}
-	return res.outputs[0]!.text();
+	const code = await res.outputs[0]?.text();
+	if (code === undefined) {
+		throw new Error("No output found");
+	}
+	return code;
 }
 
 async function remakeDist() {
@@ -68,7 +72,7 @@ async function main() {
 		build(),
 		remakeDist(),
 	]);
-	file(`./.dist/${pkg.name}.dion.js`).write(
+	await file(`./.dist/${pkg.name}.dion.js`).write(
 		`//${JSON.stringify(toExtensionData(pkg, repo.name, gitUrl))}\n${source}`,
 	);
 }

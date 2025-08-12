@@ -1,4 +1,5 @@
 import { copyFile, readdir } from "node:fs/promises";
+import { join } from "node:path";
 import { $, file } from "bun";
 import {
 	extensionsSchema,
@@ -16,12 +17,16 @@ async function main() {
 	]);
 
 	await Promise.all(
-		extensions.map((extension) =>
-			copyFile(
-				`./extensions/${extension}/.dist/${extension}.dion.js`,
-				`./${index_folder}/${extension}.dion.js`,
-			),
-		),
+		extensions.map(async (extension) => {
+			const src = join(
+				"extensions",
+				extension,
+				".dist",
+				`${extension}.dion.js`,
+			);
+			const dest = join(index_folder, `${extension}.dion.js`);
+			await copyFile(src, dest);
+		}),
 	);
 
 	const extensionindex = await Promise.all(

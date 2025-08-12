@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
+import { readdirSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import { $ } from "bun";
-import { readdirSync, statSync } from "fs";
-import { join, relative } from "path";
 
 function assertEnv(name) {
   const value = process.env[name];
@@ -14,9 +14,13 @@ function assertEnv(name) {
 function collectFilesRecursively(rootDir) {
   const files = [];
   function walk(dir) {
-    for (const entry of readdirSync(dir)) {
+    const entries = readdirSync(dir).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    for (const entry of entries) {
       const full = join(dir, entry);
       const st = statSync(full);
+      if (st.isSymbolicLink()) continue;
       if (st.isDirectory()) walk(full);
       else if (st.isFile()) files.push(full);
     }
@@ -53,11 +57,15 @@ function collectFilesRecursively(rootDir) {
     for (let i = 0; i < files.length; i += batchSize) {
       const batch = files.slice(i, i + batchSize);
       const fileArgs = batch.map((p) => {
-        const rel = relative(dir, p);
+        const rel = relative(dir, p).replace(/\//g, "-");
         return `${p}#${rel}`;
       });
-      const res = await $`gh release upload ${tag} ${fileArgs} --clobber --repo ${repositorySlug}`.nothrow();
+      const res =
+        await $`gh release upload ${tag} ${fileArgs} --clobber --repo ${repositorySlug}`.nothrow();
       if (res.exitCode !== 0) {
+        console.error(`gh release upload failed with code ${res.exitCode}`);
+        console.error(res.stdout.toString());
+        console.error(res.stderr.toString());
         process.exit(res.exitCode);
       }
     }
