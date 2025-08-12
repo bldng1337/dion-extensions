@@ -14,7 +14,7 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "dion-runtime-types": "catalog:",
-    "dion-runtime-configs": "catalog:"
+    "dion-runtime-configs": "workspace:*"
   },
   "private": true
 }

@@ -32,16 +32,16 @@
 		"check-types": "bunx tsc --noEmit"
 	},
 	"dependencies": {
-		"dion-runtime-lib": "catalog:"
+		"dion-runtime-lib": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/bun": "catalog:",
 		"@biomejs/biome": "catalog:",
 		"dion-node-runtime": "catalog:",
-		"dion-repo-scripts": "catalog:",
-		"dion-runtime-configs": "catalog:",
+		"dion-repo-scripts": "workspace:*",
+		"dion-runtime-configs": "workspace:*",
 		"dion-runtime-types": "catalog:",
-		"dion-test-asserts": "catalog:",
+		"dion-test-asserts": "workspace:*",
 		"typescript": "catalog:"
 	}
 }

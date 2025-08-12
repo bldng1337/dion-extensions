@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"check-types": "bunx tsc -p tsconfig.json",
-		"build": "echo nothing to build",
+		"build": "bun run ./build.ts",
 		"lint": "bunx biome check",
 		"format": "bunx biome format --write"
 	},
@@ -23,6 +23,6 @@
 		"@biomejs/biome": "catalog:",
 		"@types/bun": "catalog:",
 		"typescript": "catalog:",
-		"dion-runtime-configs": "catalog:"
+		"dion-runtime-configs": "workspace:*"
 	}
 }
