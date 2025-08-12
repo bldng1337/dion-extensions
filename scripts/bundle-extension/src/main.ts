@@ -9,7 +9,7 @@ import {
 	parseFile,
 	repoSchema,
 	toExtensionData,
-} from "./utils.ts";
+} from "dion-repo-utils";
 
 async function tryFetchGitUrl(
 	repo: Promise<ExtensionRepo>,
@@ -47,8 +47,7 @@ async function build(): Promise<string> {
 	});
 	if (!res.success) throw new AggregateError(res.logs);
 	if (res.outputs.length === 0) {
-		console.error("No outputs found");
-		process.exit(1);
+		throw new Error("No outputs found");
 	}
 	const code = await res.outputs[0]?.text();
 	if (code === undefined) {
@@ -63,17 +62,22 @@ async function remakeDist() {
 }
 
 async function main() {
-	const repopromise = parseFile("../../package.json", repoSchema);
+	try {
+		const repopromise = parseFile("../../package.json", repoSchema);
 
-	const [repo, pkg, gitUrl, source] = await Promise.all([
-		repopromise,
-		parseFile("./package.json", extensionsSchema),
-		tryFetchGitUrl(repopromise),
-		build(),
-		remakeDist(),
-	]);
-	await file(`./.dist/${pkg.name}.dion.js`).write(
-		`//${JSON.stringify(toExtensionData(pkg, repo.name, gitUrl))}\n${source}`,
-	);
+		const [repo, pkg, gitUrl, source] = await Promise.all([
+			repopromise,
+			parseFile("./package.json", extensionsSchema),
+			tryFetchGitUrl(repopromise),
+			build(),
+			remakeDist(),
+		]);
+		await file(`./.dist/${pkg.name}.dion.js`).write(
+			`//${JSON.stringify(toExtensionData(pkg, repo.name, gitUrl))}\n${source}`,
+		);
+	} catch (e) {
+		console.error(e);
+		process.exit(1);
+	}
 }
 main();

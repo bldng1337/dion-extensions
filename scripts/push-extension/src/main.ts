@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 /// <reference types="node" />
 /// <reference types="dion-runtime-types" />
+/// <reference types="bun" />
 import fs from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -46,9 +47,9 @@ log(`Pushing to ${extpath}`);
 
 const extensions = fs.readdirSync(values.input);
 
-log(`Found files in .dist: ${extensions}`);
+log(`Found files in ${values.input}: ${extensions}`);
 
-const extension = extensions.filter((name) => name.includes(".dion.js"))[0];
+const extension = extensions.filter((name) => name.endsWith(".dion.js"))[0];
 
 log(`Found extension: ${extension}`);
 
@@ -57,4 +58,4 @@ if (extension === undefined) {
 	process.exit(1);
 }
 
-fs.copyFileSync(path.join(".dist", extension), path.join(extpath, extension));
+fs.copyFileSync(path.join(values.input, extension), path.join(extpath, extension));

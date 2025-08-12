@@ -17,9 +17,13 @@ export async function parseFile<
 		: unknown
 > {
 	const text = await file(filename).text();
-	if (schema === undefined) return JSON.parse(text);
-	// biome-ignore lint/suspicious/noExplicitAny: Its safe but i dont want to do typescript hoop jumping to get around this
-	return v.parse(schema, JSON.parse(text)) as any;
+	try {
+		if (schema === undefined) return JSON.parse(text);
+		// biome-ignore lint/suspicious/noExplicitAny: Its safe but i dont want to do typescript hoop jumping to get around this
+		return v.parse(schema, JSON.parse(text)) as any;
+	} catch (e) {
+		throw new Error(`Failed to parse ${filename}: ${e}`);
+	}
 }
 
 export const repoSchema = v.object({
@@ -36,13 +40,13 @@ export const repoSchema = v.object({
 
 export type ExtensionRepo = InferOutput<typeof repoSchema>;
 
-export const mediatypes: MediaType[] = [
+export const mediatypes = [
 	"Video",
 	"Comic",
 	"Audio",
 	"Book",
 	"Unknown",
-] as const;
+] as const satisfies readonly MediaType[];
 
 export const extensionsSchema = v.object({
 	name: v.string(),

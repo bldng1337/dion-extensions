@@ -2,7 +2,7 @@ import { $ } from "bun";
 
 await $`rm -rf .dist && mkdir .dist`;
 const bundle = await Bun.build({
-	entrypoints: ["src/bundle_bun.ts", "src/push.ts", "src/action_build.ts"],
+	entrypoints: ["src/main.ts"],
 	outdir: ".dist",
 	target: "bun",
 	// minify: true,

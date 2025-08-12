@@ -6,9 +6,9 @@
       "devDependencies": {
         "@biomejs/biome": "2.1.1",
         "@types/bun": "^1.2.19",
+        "dion-build-index": "workspace:*",
         "dion-create": "workspace:*",
         "dion-node-runtime": "0.5.0",
-        "dion-repo-scripts": "workspace:*",
         "dion-runtime-configs": "workspace:*",
         "dion-runtime-lib": "workspace:*",
         "dion-runtime-types": "0.14.1",
@@ -26,8 +26,9 @@
       "devDependencies": {
         "@biomejs/biome": "catalog:",
         "@types/bun": "catalog:",
+        "dion-bundle-extension": "workspace:*",
         "dion-node-runtime": "catalog:",
-        "dion-repo-scripts": "workspace:*",
+        "dion-push-extension": "workspace:*",
         "dion-runtime-configs": "workspace:*",
         "dion-runtime-types": "catalog:",
         "dion-test-asserts": "workspace:*",
@@ -81,13 +82,59 @@
         "dion-runtime-types": "catalog:",
       },
     },
-    "packages/scripts": {
-      "name": "dion-repo-scripts",
-      "version": "0.7.0",
+    "packages/repo-utils": {
+      "name": "dion-repo-utils",
+      "version": "0.1.0",
+      "dependencies": {
+        "valibot": "^1.1.0",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@types/bun": "catalog:",
+        "dion-runtime-configs": "workspace:*",
+        "dion-runtime-types": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "scripts/build-index": {
+      "name": "dion-build-index",
+      "version": "0.1.0",
       "bin": {
-        "dion-bundle": "./.dist/bundle_bun.js",
-        "dion-push": "./.dist/push.js",
-        "dion-index-build": "./.dist/action_build.js",
+        "dion-build-index": "./.dist/main.js",
+      },
+      "dependencies": {
+        "dion-repo-utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@types/bun": "catalog:",
+        "dion-runtime-configs": "workspace:*",
+        "dion-runtime-types": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "scripts/bundle-extension": {
+      "name": "dion-bundle-extension",
+      "version": "0.1.0",
+      "bin": {
+        "dion-bundle-extension": "./.dist/main.js",
+      },
+      "dependencies": {
+        "dion-repo-utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@types/bun": "catalog:",
+        "dion-runtime-configs": "workspace:*",
+        "dion-runtime-types": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "scripts/push-extension": {
+      "name": "dion-push-extension",
+      "version": "0.1.0",
+      "bin": {
+        "dion-push-extension": "./.dist/main.js",
       },
       "dependencies": {
         "valibot": "^1.1.0",
@@ -169,11 +216,17 @@
 
     "delayed-stream": ["delayed-stream@1.0.0", "", {}, "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ=="],
 
+    "dion-build-index": ["dion-build-index@workspace:scripts/build-index"],
+
+    "dion-bundle-extension": ["dion-bundle-extension@workspace:scripts/bundle-extension"],
+
     "dion-create": ["dion-create@workspace:packages/create"],
 
     "dion-node-runtime": ["dion-node-runtime@0.5.0", "", {}, "sha512-Zt5hOJ9JqbppgfC66aXkV5XviCLzvtRYbYpsvPm4uLSxBdl6khaDtOR7/QBENUxynHPnqNs0Psx8Te7aKE39HA=="],
 
-    "dion-repo-scripts": ["dion-repo-scripts@workspace:packages/scripts"],
+    "dion-push-extension": ["dion-push-extension@workspace:scripts/push-extension"],
+
+    "dion-repo-utils": ["dion-repo-utils@workspace:packages/repo-utils"],
 
     "dion-runtime-configs": ["dion-runtime-configs@workspace:packages/config"],
 

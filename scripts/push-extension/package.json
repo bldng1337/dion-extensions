@@ -1,0 +1,28 @@
+{
+	"name": "dion-push-extension",
+	"type": "module",
+	"version": "0.1.0",
+	"private": true,
+	"bin": {
+		"dion-push-extension": "./.dist/main.js"
+	},
+	"exports": {
+		"./*": "./.dist/*"
+	},
+	"scripts": {
+		"check-types": "bunx tsc -p tsconfig.json",
+		"build": "bun run ./build.ts",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write"
+	},
+	"dependencies": {
+		"valibot": "^1.1.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"@types/bun": "catalog:",
+		"dion-runtime-types": "catalog:",
+		"dion-runtime-configs": "workspace:*",
+		"typescript": "catalog:"
+	}
+}

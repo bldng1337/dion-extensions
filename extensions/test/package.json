@@ -25,10 +25,10 @@
 	"scripts": {
 		"test": "bun test",
 		"lint": "bunx biome check",
-		"pushdev": "bunx dion-push -d",
-		"push": "bunx dion-push",
+		"pushdev": "bunx dion-push-extension -d",
+		"push": "bunx dion-push-extension",
 		"format": "bunx biome format --write",
-		"build": "bunx dion-bundle",
+		"build": "bunx dion-bundle-extension",
 		"check-types": "bunx tsc --noEmit"
 	},
 	"dependencies": {
@@ -38,8 +38,9 @@
 		"@types/bun": "catalog:",
 		"@biomejs/biome": "catalog:",
 		"dion-node-runtime": "catalog:",
-		"dion-repo-scripts": "workspace:*",
 		"dion-runtime-configs": "workspace:*",
+		"dion-bundle-extension": "workspace:*",
+		"dion-push-extension": "workspace:*",
 		"dion-runtime-types": "catalog:",
 		"dion-test-asserts": "workspace:*",
 		"typescript": "catalog:"

@@ -1,0 +1,28 @@
+{
+	"name": "dion-bundle-extension",
+	"type": "module",
+	"version": "0.1.0",
+	"private": true,
+	"bin": {
+		"dion-bundle-extension": "./.dist/main.js"
+	},
+	"exports": {
+		"./*": "./.dist/*"
+	},
+	"scripts": {
+		"check-types": "bunx tsc -p tsconfig.json",
+		"build": "bun run ./build.ts",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write"
+	},
+	"dependencies": {
+		"dion-repo-utils": "workspace:*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"@types/bun": "catalog:",
+		"dion-runtime-types": "catalog:",
+		"dion-runtime-configs": "workspace:*",
+		"typescript": "catalog:"
+	}
+}

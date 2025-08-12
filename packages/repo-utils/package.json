@@ -1,19 +1,13 @@
 {
-	"name": "dion-repo-scripts",
+	"name": "dion-repo-utils",
 	"type": "module",
-	"version": "0.7.0",
+	"version": "0.1.0",
 	"private": true,
-	"bin": {
-		"dion-bundle": "./.dist/bundle_bun.js",
-		"dion-push": "./.dist/push.js",
-		"dion-index-build": "./.dist/action_build.js"
-	},
 	"exports": {
-		"./*": "./.dist/*"
+		".": "./src/main.ts"
 	},
 	"scripts": {
 		"check-types": "bunx tsc -p tsconfig.json",
-		"build": "bun run ./build.ts",
 		"lint": "bunx biome check",
 		"format": "bunx biome format --write"
 	},

@@ -6,7 +6,7 @@ import {
 	parseFile,
 	repoSchema,
 	toExtensionData,
-} from "./utils.ts";
+} from "dion-repo-utils";
 
 async function main() {
 	const index_folder = ".index";
