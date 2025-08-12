@@ -28,7 +28,10 @@ jobs:
       - name: print packages
         run: bun pm ls
 
-      - name: Build scripts
+      - name: build scripts
+        run: bunx turbo run build --filter dion*
+
+      - name: Build all extensions
         run: bunx turbo run build
 
       - name: Build index
