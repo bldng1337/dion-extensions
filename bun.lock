@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "main_repo",
+      "name": "dion-extensions",
       "devDependencies": {
         "@biomejs/biome": "2.1.1",
         "@types/bun": "^1.2.19",
@@ -16,16 +16,16 @@
       "name": "test",
       "version": "1.0.0",
       "dependencies": {
-        "dion-runtime-lib": "catalog:",
+        "dion-runtime-lib": "workspace:*",
       },
       "devDependencies": {
         "@biomejs/biome": "catalog:",
         "@types/bun": "catalog:",
         "dion-node-runtime": "catalog:",
-        "dion-repo-scripts": "catalog:",
-        "dion-runtime-configs": "catalog:",
+        "dion-repo-scripts": "workspace:*",
+        "dion-runtime-configs": "workspace:*",
         "dion-runtime-types": "catalog:",
-        "dion-test-asserts": "catalog:",
+        "dion-test-asserts": "workspace:*",
         "typescript": "catalog:",
       },
     },
@@ -39,7 +39,7 @@
       },
       "devDependencies": {
         "@types/m3u8-parser": "^7.2.2",
-        "dion-runtime-configs": "catalog:",
+        "dion-runtime-configs": "workspace:*",
         "dion-runtime-types": "catalog:",
       },
     },
@@ -63,7 +63,7 @@
       "devDependencies": {
         "@biomejs/biome": "catalog:",
         "@types/bun": "catalog:",
-        "dion-runtime-configs": "catalog:",
+        "dion-runtime-configs": "workspace:*",
         "typescript": "catalog:",
       },
     },
@@ -72,7 +72,7 @@
       "version": "0.1.0",
       "devDependencies": {
         "@biomejs/biome": "catalog:",
-        "dion-runtime-configs": "catalog:",
+        "dion-runtime-configs": "workspace:*",
         "dion-runtime-types": "catalog:",
       },
     },
@@ -90,7 +90,7 @@
       "devDependencies": {
         "@biomejs/biome": "catalog:",
         "@types/bun": "catalog:",
-        "dion-runtime-configs": "catalog:",
+        "dion-runtime-configs": "workspace:*",
         "dion-runtime-types": "catalog:",
         "typescript": "catalog:",
       },
@@ -124,13 +124,13 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.1.1", "", { "os": "win32", "cpu": "x64" }, "sha512-i2PKdn70kY++KEF/zkQFvQfX1e8SkA8hq4BgC+yE9dZqyLzB/XStY2MvwI3qswlRgnGpgncgqe0QYKVS1blksg=="],
 
-    "@types/bun": ["@types/bun@1.2.19", "", { "dependencies": { "bun-types": "1.2.19" } }, "sha512-d9ZCmrH3CJ2uYKXQIUuZ/pUnTqIvLDS0SK7pFmbx8ma+ziH/FRMoAq5bYpRG7y+w1gl+HgyNZbtqgMq4W4e2Lg=="],
+    "@types/bun": ["@types/bun@1.2.20", "", { "dependencies": { "bun-types": "1.2.20" } }, "sha512-dX3RGzQ8+KgmMw7CsW4xT5ITBSCrSbfHc36SNT31EOUg/LA9JWq0VDdEXDRSe1InVWpd2yLUM1FUF/kEOyTzYA=="],
 
     "@types/m3u8-parser": ["@types/m3u8-parser@7.2.3", "", {}, "sha512-5qleblo43RShftqx+2bX/xmfSf3r6FQ8OvbHtwxgZcGuJKIDzSw4Hi7nu13k9B5qwPIixKlPN6za/ah4NH7dbg=="],
 
     "@types/node": ["@types/node@24.2.1", "", { "dependencies": { "undici-types": "~7.10.0" } }, "sha512-DRh5K+ka5eJic8CjH7td8QpYEV6Zo10gfRkjHCO3weqZHWDtAaSTFtl4+VMqOJ4N5jcuhZ9/l+yy8rVgw7BQeQ=="],
 
-    "@types/react": ["@types/react@19.1.9", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-WmdoynAX8Stew/36uTSVMcLJJ1KRh6L3IZRx1PZ7qJtBqT3dYTgyDTx8H1qoRghErydW7xw9mSJ3wS//tCRpFA=="],
+    "@types/react": ["@types/react@19.1.10", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-EhBeSYX0Y6ye8pNebpKrwFJq7BoQ8J5SO6NlvNwwHjSj6adXJViPQrKlsyPw7hLBLvckEMO1yxeGdR82YBBlDg=="],
 
     "@videojs/vhs-utils": ["@videojs/vhs-utils@4.1.1", "", { "dependencies": { "@babel/runtime": "^7.12.5", "global": "^4.4.0" } }, "sha512-5iLX6sR2ownbv4Mtejw6Ax+naosGvoT9kY+gcuHzANyUZZ+4NpeNdKMUhb6ag0acYej1Y7cmr/F2+4PrggMiVA=="],
 
@@ -148,7 +148,7 @@
 
     "bcrypt-pbkdf": ["bcrypt-pbkdf@1.0.2", "", { "dependencies": { "tweetnacl": "^0.14.3" } }, "sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w=="],
 
-    "bun-types": ["bun-types@1.2.19", "", { "dependencies": { "@types/node": "*" }, "peerDependencies": { "@types/react": "^19" } }, "sha512-uAOTaZSPuYsWIXRpj7o56Let0g/wjihKCkeRqUBhlLVM/Bt+Fj9xTo+LhC1OV1XDaGkz4hNC80et5xgy+9KTHQ=="],
+    "bun-types": ["bun-types@1.2.20", "", { "dependencies": { "@types/node": "*" }, "peerDependencies": { "@types/react": "^19" } }, "sha512-pxTnQYOrKvdOwyiyd/7sMt9yFOenN004Y6O4lCcCUoKVej48FS5cvTw9geRaEcB9TsDZaJKAxPTVvi8tFsVuXA=="],
 
     "caseless": ["caseless@0.12.0", "", {}, "sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw=="],
 
