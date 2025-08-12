@@ -27,7 +27,7 @@ jobs:
 
       - name: Build index
         run: |
-          bunx dion-index-build
+          bun run dion-index-build --filter dion-repo-scripts
 
       - name: Ensure release exists
         env:
