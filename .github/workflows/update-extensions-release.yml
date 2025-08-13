@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          bun install
+          bun install --frozen-lockfile
 
       - name: print packages
         run: bun pm ls
@@ -31,18 +31,12 @@ jobs:
       - name: build scripts
         run: bunx turbo run build --filter dion*
 
-      - name: update scripts
-        run: |
-          bun update dion-build-index
-          bun update dion-bundle-extension
-          bun update dion-push-extension
-
       - name: Build all extensions
         run: bunx turbo run build
 
       - name: Build index
         run: |
-          bun run dion-index-build --filter dion-repo-scripts
+          bun run build-index
 
       - name: Ensure release exists
         env:

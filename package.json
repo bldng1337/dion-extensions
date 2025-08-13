@@ -1,46 +1,47 @@
 {
-  "name": "dion-extensions",
-  "description": "Official extensions for Dion",
-  "icon": "https://raw.githubusercontent.com/dionysos/dionysos/main/assets/logo.png",
-  "id": "4a2831ae-a39d-49d5-a82c-1d1557a1b91f",
-  "repository": {
-    "url": "https://github.com/bldng1337/dion-extensions"
-  },
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "check-types": "turbo run check-types",
-    "create": "bunx dion-create"
-  },
-  "devDependencies": {
-    "turbo": "^2.5.4",
-    "dion-node-runtime": "0.5.0",
-    "dion-runtime-types": "0.14.1",
-    "typescript": "^5.8.3",
-    "dion-runtime-configs": "workspace:*",
-    "dion-build-index": "workspace:*",
-    "dion-test-asserts": "workspace:*",
-    "dion-runtime-lib": "workspace:*",
-    "dion-create": "workspace:*",
-    "@biomejs/biome": "2.1.1",
-    "@types/bun": "^1.2.19"
-  },
-  "engines": {
-    "bun": "^1.2.19"
-  },
-  "packageManager": "bun@1.2.19",
-  "workspaces": [
-    "extensions/*",
-    "packages/*",
-    "scripts/*"
-  ],
-  "catalog": {
-    "dion-node-runtime": "0.5.0",
-    "dion-runtime-types": "0.14.1",
-    "typescript": "^5.8.3",
-    "@biomejs/biome": "2.1.1",
-    "@types/bun": "^1.2.19"
-  }
+	"name": "dion-extensions",
+	"description": "Official extensions for Dion",
+	"icon": "https://raw.githubusercontent.com/dionysos/dionysos/main/assets/logo.png",
+	"id": "4a2831ae-a39d-49d5-a82c-1d1557a1b91f",
+	"repository": {
+		"url": "https://github.com/bldng1337/dion-extensions"
+	},
+	"private": true,
+	"scripts": {
+		"build": "turbo run build",
+		"test": "turbo run test",
+		"lint": "turbo run lint",
+		"check-types": "turbo run check-types",
+		"create": "bunx dion-create",
+		"build-index": "bunx dion-build-index"
+	},
+	"devDependencies": {
+		"turbo": "^2.5.4",
+		"dion-node-runtime": "0.5.0",
+		"dion-runtime-types": "0.14.1",
+		"typescript": "^5.8.3",
+		"dion-runtime-configs": "workspace:*",
+		"dion-build-index": "workspace:*",
+		"dion-test-asserts": "workspace:*",
+		"dion-runtime-lib": "workspace:*",
+		"dion-create": "workspace:*",
+		"@biomejs/biome": "2.1.1",
+		"@types/bun": "^1.2.19"
+	},
+	"engines": {
+		"bun": "^1.2.19"
+	},
+	"packageManager": "bun@1.2.19",
+	"workspaces": [
+		"extensions/*",
+		"packages/*",
+		"scripts/*"
+	],
+	"catalog": {
+		"dion-node-runtime": "0.5.0",
+		"dion-runtime-types": "0.14.1",
+		"typescript": "^5.8.3",
+		"@biomejs/biome": "2.1.1",
+		"@types/bun": "^1.2.19"
+	}
 }

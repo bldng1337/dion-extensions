@@ -2,13 +2,15 @@
 	"name": "dion-bundle-extension",
 	"type": "module",
 	"version": "0.1.0",
-	"private": true,
 	"bin": {
 		"dion-bundle-extension": "./.dist/main.js"
 	},
 	"exports": {
 		"./*": "./.dist/*"
 	},
+	"files": [
+		".dist"
+	],
 	"scripts": {
 		"check-types": "bunx tsc -p tsconfig.json",
 		"build": "bun run ./build.ts",

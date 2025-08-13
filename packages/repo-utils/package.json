@@ -2,7 +2,6 @@
 	"name": "dion-repo-utils",
 	"type": "module",
 	"version": "0.1.0",
-	"private": true,
 	"exports": {
 		".": "./src/main.ts"
 	},
