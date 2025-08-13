@@ -5,6 +5,9 @@
 	"exports": {
 		".": "./src/main.ts"
 	},
+	"files": [
+		"src"
+	],
 	"scripts": {
 		"check-types": "bunx tsc -p tsconfig.json",
 		"lint": "bunx biome check",
