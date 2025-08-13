@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { copyFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { $, file } from "bun";
@@ -12,21 +13,20 @@ async function main() {
 	const index_folder = ".index";
 	const [extensions] = await Promise.all([
 		readdir("./extensions"),
-		$`bunx turbo run build`,
 		$`rm -rf ${index_folder} && mkdir ${index_folder}`,
 	]);
 
 	await Promise.all(
-		extensions.map(async (extension) => {
-			const src = join(
-				"extensions",
-				extension,
-				".dist",
-				`${extension}.dion.js`,
-			);
-			const dest = join(index_folder, `${extension}.dion.js`);
-			await copyFile(src, dest);
-		}),
+		extensions
+			.map((extension) => ({
+				src: join("extensions", extension, ".dist", `${extension}.dion.js`),
+				dest: join(index_folder, `${extension}.dion.js`),
+			}))
+			.filter(({ src }) => existsSync(src))
+			.map(async ({ src, dest }) => {
+				console.log(`Copying ${src} to ${dest}`);
+				await copyFile(src, dest);
+			}),
 	);
 
 	const extensionindex = await Promise.all(
