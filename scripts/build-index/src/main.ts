@@ -54,6 +54,9 @@ async function main() {
 }
 
 main().catch((e) => {
+	console.error("Failed to build index");
+	console.error(e.message);
+	console.error(e.stack);
 	console.error(e);
 	process.exit(1);
 });
