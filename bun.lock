@@ -98,7 +98,7 @@
     },
     "scripts/build-index": {
       "name": "dion-build-index",
-      "version": "0.1.0",
+      "version": "0.2.1",
       "bin": {
         "dion-build-index": "./.dist/main.js",
       },
@@ -132,7 +132,7 @@
     },
     "scripts/push-extension": {
       "name": "dion-push-extension",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "bin": {
         "dion-push-extension": "./.dist/main.js",
       },

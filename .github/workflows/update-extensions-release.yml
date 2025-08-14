@@ -36,7 +36,7 @@ jobs:
 
       - name: Build index
         run: |
-          bun run build-index
+          bun run scripts/build-index/src/main.ts 2>&1
 
       - name: Ensure release exists
         env:
