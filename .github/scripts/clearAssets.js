@@ -18,7 +18,7 @@ async function main() {
     // Normalize for gh CLI which prefers GH_TOKEN
     process.env.GH_TOKEN = ghToken;
     const repositorySlug = assertEnv("GITHUB_REPOSITORY");
-    const ghCheck = await $`gh --version`.quiet().nothrow();
+    const ghCheck = await $`gh --version`.nothrow();
     if (ghCheck.exitCode !== 0) {
       throw new Error("GitHub CLI 'gh' is not installed or not in PATH");
     }
@@ -27,11 +27,9 @@ async function main() {
     let assets = [];
     try {
       const parsed =
-        await $`gh release view ${tag} --json assets --repo ${repositorySlug}`
-          .quiet()
-          .json();
+        await $`gh release view ${tag} --json assets --repo ${repositorySlug}`.json();
       assets = Array.isArray(parsed.assets) ? parsed.assets : [];
-    } catch (err) {
+    } catch (_err) {
       console.log(
         `No release or assets found for tag ${tag}. Nothing to clear.`
       );
@@ -45,7 +43,7 @@ async function main() {
 
     for (const asset of assets) {
       if (!asset?.id) continue;
-      console.log(`Deleting asset ${asset.id}`);
+      console.log(`Deleting asset ${JSON.stringify(asset)}`);
       const del =
         await $`gh api --method DELETE repos/${repositorySlug}/releases/assets/${asset.id}`.nothrow();
       if (del.exitCode !== 0) {
