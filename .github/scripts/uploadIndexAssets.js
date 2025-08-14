@@ -14,9 +14,7 @@ function assertEnv(name) {
 function collectFilesRecursively(rootDir) {
   const files = [];
   function walk(dir) {
-    const entries = readdirSync(dir).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    const entries = readdirSync(dir).sort((a, b) => a.localeCompare(b));
     for (const entry of entries) {
       const full = join(dir, entry);
       const st = statSync(full);
