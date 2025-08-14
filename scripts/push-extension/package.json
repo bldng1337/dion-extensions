@@ -1,7 +1,7 @@
 {
 	"name": "dion-push-extension",
 	"type": "module",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"bin": {
 		"dion-push-extension": "./.dist/main.js"
 	},

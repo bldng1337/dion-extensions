@@ -5,6 +5,7 @@ const bundle = await Bun.build({
 	entrypoints: ["src/main.ts"],
 	outdir: ".dist",
 	target: "bun",
+	packages: "external",
 	// minify: true,
 	// bytecode: true,
 	// format: "cjs",
