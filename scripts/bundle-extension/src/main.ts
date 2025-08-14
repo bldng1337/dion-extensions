@@ -17,7 +17,7 @@ async function tryFetchGitUrl(
 	let command_res: string | undefined;
 	let command_error: unknown | undefined;
 	try {
-		const res = await $`git config --get remote.origin.url`;
+		const res = await $`git config --get remote.origin.url`.quiet();
 		command_res = res.stdout.toString().trim();
 	} catch (error) {
 		command_error = error;
@@ -28,6 +28,7 @@ async function tryFetchGitUrl(
 	}
 	if (command_error !== undefined) {
 		console.error(`Failed to get Repo URL from git config: ${command_error}`);
+		return undefined;
 	}
 	return command_res;
 }
