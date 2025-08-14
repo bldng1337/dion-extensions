@@ -44,10 +44,11 @@ async function main() {
     for (const asset of assets) {
       if (!asset?.id) continue;
       console.log(`Deleting asset ${JSON.stringify(asset)}`);
+      const assetid = asset.apiUrl.split("/").pop();
       const del =
-        await $`gh api --method DELETE repos/${repositorySlug}/releases/assets/${asset.id}`.nothrow();
+        await $`gh api --method DELETE repos/${repositorySlug}/releases/assets/${assetid}`.nothrow();
       if (del.exitCode !== 0) {
-        throw new Error(`Failed to delete asset ${asset.id}`);
+        throw new Error(`Failed to delete asset ${assetid}`);
       }
     }
   } catch (error) {
