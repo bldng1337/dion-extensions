@@ -35,7 +35,10 @@ async function main() {
 				`./extensions/${extension}/package.json`,
 				extensionsSchema,
 			);
-			return toExtensionData(packagejson);
+			return {
+				path: `${extension}.dion.js`,
+				extdata: toExtensionData(packagejson),
+			};
 		}),
 	);
 
