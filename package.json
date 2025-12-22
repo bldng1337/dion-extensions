@@ -3,6 +3,7 @@
 	"description": "Official extensions for Dion",
 	"icon": "https://placehold.co/256x256/EEE/31343C.png?text=Repo",
 	"id": "4a2831ae-a39d-49d5-a82c-1d1557a1b91f",
+	"url": "https://github.com/bldng1337/dion-extensions",
 	"repository": {
 		"url": "https://github.com/bldng1337/dion-extensions"
 	},
@@ -16,32 +17,39 @@
 		"build-index": "bunx dion-build-index"
 	},
 	"devDependencies": {
-		"turbo": "^2.5.4",
-		"dion-node-runtime": "0.5.0",
-		"dion-runtime-types": "0.14.1",
-		"typescript": "^5.8.3",
-		"dion-runtime-configs": "workspace:*",
-		"dion-build-index": "workspace:*",
-		"dion-test-asserts": "workspace:*",
-		"dion-runtime-lib": "workspace:*",
-		"dion-create": "workspace:*",
-		"@biomejs/biome": "2.1.1",
-		"@types/bun": "^1.2.19"
+		"turbo": "2.6.3",
+		"typescript": "catalog:",
+		"@dion-js/extension-scripts": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@types/bun": "catalog:"
 	},
 	"engines": {
 		"bun": "^1.2.19"
 	},
 	"packageManager": "bun@1.2.19",
 	"workspaces": [
-		"extensions/*",
-		"packages/*",
-		"scripts/*"
+		"extensions/*"
 	],
 	"catalog": {
-		"dion-node-runtime": "0.5.0",
-		"dion-runtime-types": "0.14.1",
-		"typescript": "^5.8.3",
+		"@dion-js/runtime-types": "0.4.0",
+		"@dion-js/extension-types": "0.4.0",
+		"@dion-js/runtime": "1.3.1",
+		"@dion-js/config": "0.1.0",
+		"@dion-js/runtime-lib": "0.1.0",
+		"@dion-js/extension-scripts": "0.1.1",
+		"@dion-js/extension-test-utils": "0.1.0",
+		"typescript": "5.8.3",
 		"@biomejs/biome": "2.1.1",
-		"@types/bun": "^1.2.19"
+		"@types/bun": "1.3.3",
+		"valibot": "1.2.0"
+	},
+	"overrides": {
+		"@dion-js/runtime-types": "0.4.0",
+		"@dion-js/extension-types": "0.4.0",
+		"@dion-js/runtime": "1.3.1",
+		"@dion-js/config": "0.1.0",
+		"@dion-js/runtime-lib": "0.1.0",
+		"@dion-js/extension-scripts": "0.1.1",
+		"@dion-js/extension-test-utils": "0.1.0"
 	}
 }

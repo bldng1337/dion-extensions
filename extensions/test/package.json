@@ -2,6 +2,7 @@
 	"name": "test",
 	"extensionid": "b4099558-c097-4b7e-baa3-9ab66a85dd76",
 	"version": "1.0.1",
+	"extension_type": [],
 	"description": "A Dion extension",
 	"id": "1962ba32-ee81-4383-8a90-f5ec2547feae",
 	"icon": "https://placehold.co/256x256/EEE/31343C.png?text=Icon",
@@ -9,7 +10,6 @@
 		"example",
 		"dion"
 	],
-	"min_api_version": "1.0.0",
 	"lang": [
 		"en"
 	],
@@ -20,29 +20,29 @@
 	],
 	"author": "Author",
 	"license": "ISC",
+	"api_version": "*",
 	"private": true,
 	"type": "module",
 	"scripts": {
 		"test": "bun test",
 		"lint": "bunx biome check",
-		"pushdev": "bunx dion-push-extension -d",
-		"push": "bunx dion-push-extension",
 		"format": "bunx biome format --write",
-		"build": "bunx dion-bundle-extension",
+		"build": "bunx dion-bundle",
 		"check-types": "bunx tsc --noEmit"
 	},
 	"dependencies": {
-		"dion-runtime-lib": "workspace:*"
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
 	},
 	"devDependencies": {
 		"@types/bun": "catalog:",
 		"@biomejs/biome": "catalog:",
-		"dion-node-runtime": "catalog:",
-		"dion-runtime-configs": "workspace:*",
-		"dion-bundle-extension": "workspace:*",
-		"dion-push-extension": "workspace:*",
-		"dion-runtime-types": "catalog:",
-		"dion-test-asserts": "workspace:*",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"@dion-js/extension-scripts": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:",
 		"typescript": "catalog:"
 	}
 }

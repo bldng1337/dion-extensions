@@ -1,4 +1,5 @@
 {
-	"extends": "dion-runtime-configs/typescript.json",
+	"extends": "@dion-js/config/typescript.json",
+	"$schema": "https://json.schemastore.org/tsconfig",
 	"include": ["src/**/*"]
 }
