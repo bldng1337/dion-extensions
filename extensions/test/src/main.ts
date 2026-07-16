@@ -1,5 +1,6 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import { assert } from "@dion-js/runtime-lib/asserts.js";
+import { AuthAccount } from "@dion-js/runtime-lib/auth.js";
 import {
 	Dropdown,
 	ExtensionSetting,
@@ -20,7 +21,7 @@ import type {
 	SourceResult,
 } from "@dion-js/runtime-types/runtime";
 import { fetch } from "network";
-import { parse_html } from "parse";
+import { parseHtml } from "parse";
 
 export default class extends DionExtension implements SourceProvider {
 	settings = {
@@ -42,6 +43,7 @@ export default class extends DionExtension implements SourceProvider {
 			.setUI(new Slider(0, 100, 1))
 			.setLabel("Throw when loading"),
 	};
+	accounts = {};
 
 	maybeThrow(double: number) {
 		assert(Math.random() >= double, "Test throw!");
@@ -86,6 +88,7 @@ export default class extends DionExtension implements SourceProvider {
 
 	async search(_page: number, _filterr: string): Promise<EntryList> {
 		this.maybeThrow(await this.settings.throwsearch.get());
+
 		return {
 			content: [],
 			hasnext: false,
@@ -229,29 +232,35 @@ export default class extends DionExtension implements SourceProvider {
 			case "par": {
 				const res = await fetch("https://www.example.com/");
 				assert(res.ok, "Failed to fetch");
-				const text = await res.body;
-				const doc = parse_html(text);
+				const doc = parseHtml(res.body);
 				return {
 					source: {
 						type: "Paragraphlist",
 						paragraphs: [
-							{ type: "Text", content: doc.select(new CSSSelector("h1")).text },
-							{ type: "Text", content: epid.uid },
-							{ type: "Text", content: "This is a test" },
+							{
+								type: "Text",
+								content: doc.select(new CSSSelector("h1")).text,
+								style: null,
+							},
+							{ type: "Text", content: epid.uid, style: null },
+							{ type: "Text", content: "This is a test", style: null },
 							{
 								type: "Text",
 								content: `setting: ${await this.settings.setting.get()}`,
+								style: null,
 							},
 							{
 								type: "Text",
 								content: `other: ${await this.settings.other.get()}`,
+								style: null,
 							},
-							{ type: "Text", content: "\n\n" },
+							{ type: "Text", content: "\n\n", style: null },
 							{
 								type: "Text",
 								content: `Settings: ${JSON.stringify(settings, null, 2)}`,
+								style: null,
 							},
-							{ type: "Text", content: "" },
+							{ type: "Text", content: "", style: null },
 							// ...doc.paragraphs,//TODO: This is not working
 						],
 					},
@@ -344,7 +353,7 @@ export default class extends DionExtension implements SourceProvider {
 					`other: ${await this.settings.other.get()}`,
 					"\n\n",
 					`Settings: ${JSON.stringify(settings, null, 2)}`,
-				].map((p) => ({ type: "Text", content: p })),
+				].map((p) => ({ type: "Text", content: p, style: null })),
 			},
 		};
 	}
