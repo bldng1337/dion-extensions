@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "create-extension": {
+      "source": "bldng1337/dion-runtime",
+      "sourceType": "github",
+      "skillPath": "skills/create-extension/SKILL.md",
+      "computedHash": "21e01f777d482850b29165a667e01e29fe7e11bb1f7da097e77f7d71f435acb3"
+    }
+  }
+}
