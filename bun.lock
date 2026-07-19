@@ -15,6 +15,23 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/anilist": {
+      "name": "anilist",
+      "version": "1.0.23",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "extensions/test": {
       "name": "test",
       "version": "1.0.1",
@@ -37,22 +54,22 @@
   },
   "overrides": {
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.3.0",
+    "@dion-js/extension-scripts": "0.3.1",
     "@dion-js/extension-test-utils": "0.2.1",
-    "@dion-js/extension-types": "0.9.0",
-    "@dion-js/runtime": "1.7.0",
-    "@dion-js/runtime-lib": "0.6.0",
-    "@dion-js/runtime-types": "0.6.0",
+    "@dion-js/extension-types": "0.10.0",
+    "@dion-js/runtime": "1.9.0",
+    "@dion-js/runtime-lib": "0.8.1",
+    "@dion-js/runtime-types": "0.8.0",
   },
   "catalog": {
     "@biomejs/biome": "2.5.0",
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.3.0",
+    "@dion-js/extension-scripts": "0.3.1",
     "@dion-js/extension-test-utils": "0.2.1",
-    "@dion-js/extension-types": "0.9.0",
-    "@dion-js/runtime": "1.7.0",
-    "@dion-js/runtime-lib": "0.6.0",
-    "@dion-js/runtime-types": "0.6.0",
+    "@dion-js/extension-types": "0.10.0",
+    "@dion-js/runtime": "1.9.0",
+    "@dion-js/runtime-lib": "0.8.1",
+    "@dion-js/runtime-types": "0.8.0",
     "@types/bun": "1.3.14",
     "typescript": "6.0.3",
     "valibot": "1.4.1",
@@ -80,17 +97,17 @@
 
     "@dion-js/config": ["@dion-js/config@0.1.0", "", {}, "sha512-2sZ7uT+ycxw0LpxBjN46HcOiNRWtxNaQ8gOApoE9BF9a6ONFmoF+7FDUhYbTsHpTezV6WGTiAtD3MejeAl/XMw=="],
 
-    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.3.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "handlebars": "4.7.8", "valibot": "catalog:" }, "bin": { "dion-bundle": ".dist/bundle.js", "dion-build-index": ".dist/index.js", "dion-create": ".dist/create.js" } }, "sha512-uHn/RjJ3GJAGZephOqM6800IVgJVBiYDX58Z4GROywd6s5DNOdLeiOffQssfCb+jpZuADmpSpsmZ+38UsyOxIg=="],
+    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.3.1", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "handlebars": "4.7.8", "valibot": "catalog:" }, "bin": { "dion-bundle": ".dist/bundle.js", "dion-build-index": ".dist/index.js", "dion-create": ".dist/create.js" } }, "sha512-TrBHMtqdJW2ziOKtlCOeVxbdHvyu4aetPTdQd1e75lLSP8yTkvWwk2Xk2xCODnvhyd2g4h0r89tNoqe+WNn2cg=="],
 
     "@dion-js/extension-test-utils": ["@dion-js/extension-test-utils@0.2.1", "", { "dependencies": { "@dion-js/extension-types": "workspace:*", "@dion-js/runtime-types": "workspace:*", "image-url-validator": "^1.0.4", "m3u8-parser": "^7.2.0", "node-fetch": "^3.3.2" } }, "sha512-Lcwi8zxDafFGEiTwAgx9RSJzSndG5f02mD7y6Dd9VSL4nYLPI15L6E93eDagzDi1mtQ2TT1TTlzA51TpVGoyvQ=="],
 
-    "@dion-js/extension-types": ["@dion-js/extension-types@0.9.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "valibot": "catalog:" } }, "sha512-UYMiGk1FeVuYEHlRHAq5F8cYuS6h6KshuWzcWNrLTgXyVtVzswBQEWB8q0/BKiw2an+MbHpPRKufhXX1xv/bIw=="],
+    "@dion-js/extension-types": ["@dion-js/extension-types@0.10.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "valibot": "catalog:" } }, "sha512-tK7JzYlZmLGxRDl79j+iXynq4X61AqT064h5dZnkIkBhBwY8zs8NvvtBF7P36p5WIukFFjqTm2oi1h4JpnvaCg=="],
 
-    "@dion-js/runtime": ["@dion-js/runtime@1.7.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*" } }, "sha512-lVrLvhEbd8TMlPt6TjnL80TkpHolyN5oplnSkTEWBAohA1c/mwtxg7oYEVBxASmXsU6ufC8plvMxTD9FUz64eQ=="],
+    "@dion-js/runtime": ["@dion-js/runtime@1.9.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*" } }, "sha512-0/Hi9Y78Pdj1GFZE4Ojg90FYijavwi2d6juzuo6IupZk46omIpcf/X1Ih4GmO1D9l1W4y0DUAB9BOoJ0Z9Zv1A=="],
 
-    "@dion-js/runtime-lib": ["@dion-js/runtime-lib@0.6.0", "", {}, "sha512-AU8qAtV1TkikusejjpRvWhL/DN/ObGzkWVqIQCVis/WmwRMi4nEwpV/bcuwCIpSoMqm3T+yz+wOFWfCGzV5pgQ=="],
+    "@dion-js/runtime-lib": ["@dion-js/runtime-lib@0.8.1", "", {}, "sha512-PhiXeKyr5SUTcZzfrQ4m/nGKKunF8DvoaI7pGWwZbM5MNum0gKEG0GTlevdSphawEPX/jydKNnMyuPRull62Bw=="],
 
-    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.6.0", "", {}, "sha512-zIY+osP8aOGKx1iE2GckobET00a8lwzr1AhQCQZgJR8VlvExHABG03u9Y9zuIw85gXIiYQvFchX1PDpSYUVwkg=="],
+    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.8.0", "", {}, "sha512-zPU2cFPtlqHXjX8JTvwCExGGpd/sfZze9DZfuyECzapgMXQElyQESSOZKr2eBEWM2h/l+uarg8Dg9q88MS/a+Q=="],
 
     "@types/bun": ["@types/bun@1.3.14", "", { "dependencies": { "bun-types": "1.3.14" } }, "sha512-h1hFqFVcvAvD9j9K7ZW7vd82aSA+rTdznZa+5bwvCwqSB1jmmfLcbIWhOLx1/+boy/xmjgCs/OMUL8hRJSmnPw=="],
 
@@ -101,6 +118,8 @@
     "@videojs/vhs-utils": ["@videojs/vhs-utils@4.1.1", "", { "dependencies": { "@babel/runtime": "^7.12.5", "global": "^4.4.0" } }, "sha512-5iLX6sR2ownbv4Mtejw6Ax+naosGvoT9kY+gcuHzANyUZZ+4NpeNdKMUhb6ag0acYej1Y7cmr/F2+4PrggMiVA=="],
 
     "ajv": ["ajv@6.12.6", "", { "dependencies": { "fast-deep-equal": "^3.1.1", "fast-json-stable-stringify": "^2.0.0", "json-schema-traverse": "^0.4.1", "uri-js": "^4.2.2" } }, "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g=="],
+
+    "anilist": ["anilist@workspace:extensions/anilist"],
 
     "asn1": ["asn1@0.2.6", "", { "dependencies": { "safer-buffer": "~2.1.0" } }, "sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ=="],
 

@@ -33,12 +33,12 @@
 		"extensions/*"
 	],
 	"catalog": {
-		"@dion-js/runtime-types": "0.6.0",
-		"@dion-js/extension-types": "0.9.0",
-		"@dion-js/runtime": "1.7.0",
+		"@dion-js/runtime-types": "0.8.0",
+		"@dion-js/extension-types": "0.10.0",
+		"@dion-js/runtime": "1.9.0",
 		"@dion-js/config": "0.1.0",
-		"@dion-js/runtime-lib": "0.6.0",
-		"@dion-js/extension-scripts": "0.3.0",
+		"@dion-js/runtime-lib": "0.8.1",
+		"@dion-js/extension-scripts": "0.3.1",
 		"@dion-js/extension-test-utils": "0.2.1",
 		"typescript": "6.0.3",
 		"@biomejs/biome": "2.5.0",
@@ -46,12 +46,12 @@
 		"valibot": "1.4.1"
 	},
 	"overrides": {
-		"@dion-js/runtime-types": "0.6.0",
-		"@dion-js/extension-types": "0.9.0",
-		"@dion-js/runtime": "1.7.0",
+		"@dion-js/runtime-types": "0.8.0",
+		"@dion-js/extension-types": "0.10.0",
+		"@dion-js/runtime": "1.9.0",
 		"@dion-js/config": "0.1.0",
-		"@dion-js/runtime-lib": "0.6.0",
-		"@dion-js/extension-scripts": "0.3.0",
+		"@dion-js/runtime-lib": "0.8.1",
+		"@dion-js/extension-scripts": "0.3.1",
 		"@dion-js/extension-test-utils": "0.2.1"
 	},
 	"dependencies": {
