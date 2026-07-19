@@ -1,0 +1,59 @@
+{
+	"name": "anilist",
+	"version": "1.1.10",
+	"desc": "Bind Dion entries to AniList and track your watch/read progress.",
+	"icon": "https://anilist.co/img/icons/icon.svg",
+	"tags": [
+		"anilist",
+		"tracking",
+		"anime",
+		"manga"
+	],
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://anilist.co/",
+	"extension_type": [
+		{
+			"type": "EntryProcessor",
+			"trigger_map_entry": true,
+			"trigger_on_entry_activity": true
+		}
+	],
+	"media_type": [
+		"Video",
+		"Comic",
+		"Audio",
+		"Book",
+		"Unknown"
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "f2a9c4e1-7b3d-4e8a-9c01-2d4e6f8a1b3c",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:"
+	}
+}
