@@ -19,7 +19,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.19
 
       - name: Install dependencies
         run: |
@@ -28,15 +28,14 @@ jobs:
       - name: print packages
         run: bun pm ls
 
-      - name: build scripts
-        run: bunx turbo run build --filter dion*
+      - name: Check types
+        run: bunx turbo run check-types
 
       - name: Build all extensions
         run: bunx turbo run build
 
       - name: Build index
-        run: |
-          bun run scripts/build-index/src/main.ts 2>&1
+        run: bun run build-index
 
       - name: Ensure release exists
         env:
