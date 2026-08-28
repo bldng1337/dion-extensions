@@ -1,6 +1,6 @@
 {
 	"name": "anilist",
-	"version": "1.1.10",
+	"version": "1.2.0",
 	"desc": "Bind Dion entries to AniList and track your watch/read progress.",
 	"icon": "https://anilist.co/img/icons/icon.svg",
 	"tags": [
@@ -27,6 +27,17 @@
 		"Audio",
 		"Book",
 		"Unknown"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"anilist.co",
+				"graphql.anilist.co",
+				"s4.anilist.co",
+				"placehold.co"
+			]
+		}
 	],
 	"authors": [
 		"bldng1337"

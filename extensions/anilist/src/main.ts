@@ -12,15 +12,22 @@ import {
 import { Signal } from "@dion-js/runtime-lib/signal.js";
 import { Trigger } from "@dion-js/runtime-lib/trigger.ts";
 import {
+	Badge,
 	Button,
 	Card,
 	Column,
+	Container,
 	Image,
 	Link,
+	ListTile,
 	Nav,
+	OpenBrowser,
+	Padding,
+	PaddingSymmetric,
 	PopView,
 	Row,
 	ShowToast,
+	StarDisplay,
 	Text,
 	TextInput,
 } from "@dion-js/runtime-lib/ui.js";
@@ -428,7 +435,7 @@ function prettyListStatus(s: MediaListStatus): string {
 	return map[s] ?? s;
 }
 
-function mediaMeta(m: BoundMedia): string {
+function mediaMeta(m: BoundMedia): CustomUI[] {
 	const parts: string[] = [];
 	if (m.format) {
 		parts.push(m.format);
@@ -442,7 +449,21 @@ function mediaMeta(m: BoundMedia): string {
 	if (m.score != null) {
 		parts.push(`★ ${(m.score / 10).toFixed(1)}`);
 	}
-	return parts.join(" • ") || "AniList entry";
+	return parts.map((m) =>
+		PaddingSymmetric(
+			5,
+			0,
+			Container(Text(m), {
+				color: "SurfaceContainer",
+				padding: {
+					bottom: 2,
+					left: 4,
+					right: 4,
+					top: 2,
+				},
+			}),
+		),
+	);
 }
 
 function primaryTitle(entry: EntryDetailed): string {
@@ -533,27 +554,37 @@ export default class extends DionExtension implements EntryExtension {
 			if (bound_media) {
 				const media = parseBound(bound_media);
 				if (media && media != null) {
-					return Column(
-						media.cover ? Image({ url: media.cover }, 120) : undefined,
-						Text(media.title),
-						Text(mediaMeta(media)),
-						media.siteUrl ? Link(media.siteUrl, "View on AniList") : undefined,
-						Button("Unbind", this.triggers.unbind.invoke({ entryId })),
-					);
+					return ListTile({
+						leading: media.cover
+							? Image({ url: media.cover }, 50, 50)
+							: undefined,
+						title: Text(media.title),
+						subtitle: Row(...mediaMeta(media)),
+						trailing: Button(
+							"Unbind",
+							this.triggers.unbind.invoke({ entryId }),
+						),
+						onClick: media.siteUrl
+							? this.triggers.open_browser.invoke({ url: media.siteUrl })
+							: undefined,
+					});
 				}
 			}
-			const ret = Column(
-				Text("Not bound to AniList"),
-				Button(
-					"Bind to AniList",
+			return ListTile({
+				leading: Text("AniList"),
+				title: Text("Not bound"),
+				subtitle: Text(
+					"Bind this entry to an AniList entry to sync progress and see friends watching it.",
+				),
+				trailing: Button(
+					"Bind",
 					this.triggers.navSearch.invoke({
 						entryId: entryId,
 						mediaType: mediaType,
 						query: title,
 					}),
 				),
-			);
-			return ret;
+			});
 		}),
 		anilist_search: new Component<{
 			entryId: EntryId;
@@ -607,9 +638,14 @@ export default class extends DionExtension implements EntryExtension {
 				if (entries.length === 0) {
 					return Text("None of your friends are tracking this.");
 				}
-				return Column(
-					Text(`Friends watching (${entries.length})`),
-					Row(...entries.map((e) => this.friendRow(e, media))),
+				return Container(
+					Column(
+						Text(`Friends watching (${entries.length})`),
+						...entries.map((e) => this.friendRow(e, media)),
+					),
+					{
+						containerType: "Ghost",
+					},
 				);
 			},
 		),
@@ -648,6 +684,12 @@ export default class extends DionExtension implements EntryExtension {
 				),
 			);
 		}),
+		open_browser: new Trigger<{ url: string }>(
+			"open_browser",
+			async ({ url }) => {
+				await doAction(OpenBrowser(url));
+			},
+		),
 	};
 
 	async onload(): Promise<void> {
@@ -788,11 +830,12 @@ export default class extends DionExtension implements EntryExtension {
 	private mediaCard(m: AniListMediaNode, entryId: EntryId): CustomUI {
 		const b = toBoundMedia(m);
 		const cover =
-			b.cover ?? "https://placehold.co/200x300/2E51A2/FFFFFF.png?text=AniList";
+			b.cover ?? "https://placehold.co/200x300/2E51A2/FFFFFF.png?text=No+Cover";
 		return Card(
 			{ url: cover },
-			Column(Text(b.title), Text(mediaMeta(b))),
-			Button("Bind", this.triggers.bind.invoke({ entryId, media: b })),
+			Row(...mediaMeta(b)),
+			Text(b.title),
+			this.triggers.bind.invoke({ entryId, media: b }),
 		);
 	}
 
@@ -803,17 +846,24 @@ export default class extends DionExtension implements EntryExtension {
 			"https://placehold.co/100x100/2E51A2/FFFFFF.png?text=AL";
 		const status = e.status ? prettyListStatus(e.status) : "Tracking";
 		const parts: string[] = [];
-		if (e.progress != null) {
+		if (e.progress != null && e.progress > 0) {
 			const total = media.total != null ? `/${media.total}` : "";
 			parts.push(`${e.progress}${total}`);
 		}
-		parts.push(status);
 		if (e.repeat != null && e.repeat > 0) {
-			parts.push(`× ${e.repeat}`);
+			parts.push(`${e.repeat} rewatches`);
 		}
 		if (e.score != null && e.score > 0) {
 			parts.push(`★ ${e.score}`);
 		}
-		return Card({ url: avatar }, Text(name), Text(parts.join(" • ")));
+		return ListTile({
+			leading: Image({ url: avatar }, 50, 50),
+			title: Text(name),
+			subtitle: Text([status, ...parts].join(" • ")),
+			trailing: Text(status),
+			onClick: e.user?.siteUrl
+				? this.triggers.open_browser.invoke({ url: e.user.siteUrl })
+				: undefined,
+		});
 	}
 }
