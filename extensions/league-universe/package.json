@@ -1,0 +1,68 @@
+{
+	"name": "league-universe",
+	"version": "1.0.0",
+	"desc": "League of Legends Universe: comics, stories and videos from the official Runeterra lore site.",
+	"icon": "https://universe.leagueoflegends.com/icons/favicon-230x230.png",
+	"tags": [
+		"league of legends",
+		"runeterra",
+		"lore",
+		"comics",
+		"stories",
+		"videos"
+	],
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://universe.leagueoflegends.com",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book",
+		"Comic",
+		"Video"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"universe-meeps.leagueoflegends.com",
+				"universe-comics.leagueoflegends.com",
+				"cmsassets.rgpub.io"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "72bd5cf0-4b34-4ada-9293-65814f046a65",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:"
+	}
+}
