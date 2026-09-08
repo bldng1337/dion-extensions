@@ -1,0 +1,64 @@
+{
+	"name": "librivox",
+	"version": "1.0.0",
+	"desc": "Free public domain audiobooks read by volunteers from LibriVox.",
+	"icon": "https://librivox.org/favicon.ico",
+	"tags": [
+		"librivox",
+		"audiobooks",
+		"public domain",
+		"audio"
+	],
+	"lang": [
+		"en",
+		"multilingual"
+	],
+	"nsfw": false,
+	"url": "https://librivox.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"librivox.org",
+				"archive.org",
+				"www.archive.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "1a6ba166-4457-4b30-8940-8ec28f7f21c4",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:"
+	}
+}
