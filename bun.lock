@@ -83,6 +83,23 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/novellist": {
+      "name": "novellist",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
   },
   "overrides": {
     "@dion-js/config": "0.1.0",
@@ -304,6 +321,8 @@
     "node-domexception": ["node-domexception@1.0.0", "", {}, "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="],
 
     "node-fetch": ["node-fetch@3.3.2", "", { "dependencies": { "data-uri-to-buffer": "^4.0.0", "fetch-blob": "^3.1.4", "formdata-polyfill": "^4.0.10" } }, "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA=="],
+
+    "novellist": ["novellist@workspace:extensions/novellist"],
 
     "oauth-sign": ["oauth-sign@0.9.0", "", {}, "sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ=="],
 
