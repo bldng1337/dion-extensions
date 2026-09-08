@@ -1,0 +1,65 @@
+{
+	"name": "gutenberg",
+	"version": "1.0.0",
+	"desc": "Browse and read the 79,000+ free public domain eBooks of Project Gutenberg.",
+	"icon": "https://www.gutenberg.org/gutenberg/apple-touch-icon.png",
+	"tags": [
+		"books",
+		"ebooks",
+		"gutenberg",
+		"public domain",
+		"library"
+	],
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://www.gutenberg.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"gutenberg.org",
+				"www.gutenberg.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "af9b71a5-6184-4441-b289-a4e05f267ea4",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:"
+	}
+}
