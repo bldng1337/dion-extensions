@@ -1,0 +1,65 @@
+{
+	"name": "comic-book-plus",
+	"version": "1.0.0",
+	"description": "Read public-domain Golden Age comics (and British comics) from Comic Book Plus via its open online reader.",
+	"icon": "https://comicbookplus.com/favicon.ico",
+	"keywords": [
+		"comics",
+		"golden age",
+		"public domain",
+		"british comics"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://comicbookplus.com/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Comic"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"comicbookplus.com",
+				"www.comicbookplus.com",
+				"box01.comicbookplus.com"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "1461ca58-0221-4559-8004-b9988fbc5349",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

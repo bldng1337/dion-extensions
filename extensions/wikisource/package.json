@@ -1,0 +1,89 @@
+{
+	"name": "wikisource",
+	"version": "1.0.0",
+	"description": "A Dion extension",
+	"icon": "https://en.wikisource.org/favicon.ico",
+	"keywords": [
+		"example",
+		"dion"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"de",
+		"fr",
+		"es",
+		"it",
+		"ru",
+		"pl",
+		"zh",
+		"multilingual"
+	],
+	"nsfw": false,
+	"desc": "Read public-domain books and texts from Wikisource, the Wikimedia free library, in nine languages.",
+	"url": "https://www.wikisource.org/",
+	"tags": [
+		"books",
+		"wikisource",
+		"public domain",
+		"library",
+		"texts",
+		"reading"
+	],
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"wikisource.org",
+				"en.wikisource.org",
+				"de.wikisource.org",
+				"fr.wikisource.org",
+				"es.wikisource.org",
+				"it.wikisource.org",
+				"ru.wikisource.org",
+				"pl.wikisource.org",
+				"zh.wikisource.org",
+				"ws-export.wmcloud.org",
+				"upload.wikimedia.org",
+				"thumb.wikimedia.org"
+			]
+		}
+	],
+	"authors": [
+		"Author"
+	],
+	"license": "ISC",
+	"id": "b06a4d6b-8f84-4526-8dca-e91778114ad3",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

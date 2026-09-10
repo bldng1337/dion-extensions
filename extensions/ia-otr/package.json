@@ -1,0 +1,65 @@
+{
+	"name": "ia-otr",
+	"version": "1.0.0",
+	"description": "Classic old time radio drama series (Suspense, X Minus One, Gunsmoke, ...) from the Internet Archive's public-domain collections",
+	"icon": "https://archive.org/favicon.ico",
+	"tags": [
+		"old time radio",
+		"audio",
+		"drama",
+		"public domain",
+		"archive.org"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://archive.org/details/oldtimeradio",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"archive.org",
+				"www.archive.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "657696b9-ad7d-42f4-8a01-8ca061c34f0a",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

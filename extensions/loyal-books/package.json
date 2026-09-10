@@ -1,0 +1,74 @@
+{
+	"name": "loyal-books",
+	"version": "1.0.0",
+	"description": "Public-domain audiobooks from Loyal Books",
+	"desc": "Public-domain audiobooks (mostly LibriVox recordings) from Loyal Books, with genre and language browsing, full-catalog search and per-chapter MP3 streams.",
+	"icon": "https://www.loyalbooks.com/image/ui/logo.png",
+	"keywords": [
+		"audiobooks",
+		"dion"
+	],
+	"tags": [
+		"audiobooks",
+		"public domain",
+		"audio",
+		"loyal books"
+	],
+	"lang": [
+		"en",
+		"de",
+		"fr",
+		"es",
+		"multilingual"
+	],
+	"api_version": "*",
+	"nsfw": false,
+	"url": "https://www.loyalbooks.com/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"www.loyalbooks.com",
+				"archive.org",
+				"www.archive.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "022cf987-73e3-4611-896d-b2d880217c9e",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

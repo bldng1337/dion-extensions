@@ -1,0 +1,72 @@
+{
+	"name": "storyweaver",
+	"version": "1.0.0",
+	"description": "Illustrated children's picture books from StoryWeaver (Pratham Books), free to read in 180+ languages under CC BY 4.0.",
+	"icon": "https://storyweaver.org.in/favicon.ico",
+	"tags": [
+		"children",
+		"books",
+		"picture books",
+		"stories",
+		"education"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"mul",
+		"hi",
+		"es",
+		"fr",
+		"de",
+		"mr",
+		"ta"
+	],
+	"nsfw": false,
+	"url": "https://storyweaver.org.in/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Comic"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"storyweaver.org.in",
+				"storage.googleapis.com"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "2d6464c4-7ac1-4868-ba6c-2aea3791d319",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

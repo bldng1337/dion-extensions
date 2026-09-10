@@ -1,0 +1,70 @@
+{
+	"name": "baen",
+	"version": "1.0.0",
+	"description": "Browse and read the Baen Free Library of free science-fiction and fantasy ebooks in the open Baen web reader.",
+	"icon": "https://www.baen.com/media/favicon/default/favicon.ico",
+	"keywords": [
+		"baen",
+		"books",
+		"dion"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"desc": "Browse and read the Baen Free Library of free science-fiction and fantasy ebooks in the open Baen web reader.",
+	"url": "https://www.baen.com/",
+	"tags": [
+		"baen",
+		"scifi",
+		"fantasy",
+		"free library",
+		"books"
+	],
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"www.baen.com"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "f9228a35-2e91-4c08-95c2-c7bd6f3d970c",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

@@ -1,0 +1,68 @@
+{
+	"name": "unite-for-literacy",
+	"version": "1.0.0",
+	"description": "Free narrated children's picture books from Unite for Literacy, with per-page narration in up to 40+ languages.",
+	"icon": "https://static-cloud.uniteforliteracy.com/img/apple/unite-144x144.png",
+	"tags": [
+		"children",
+		"picture books",
+		"literacy",
+		"audio",
+		"education"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"multilingual"
+	],
+	"nsfw": false,
+	"url": "https://www.uniteforliteracy.com/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Comic"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"reader-cloud.uniteforliteracy.com",
+				"books-cloud.uniteforliteracy.com",
+				"files-cloud.uniteforliteracy.com",
+				"static-cloud.uniteforliteracy.com"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "726abdd4-ae18-44f0-bb2f-bc258d49f41c",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

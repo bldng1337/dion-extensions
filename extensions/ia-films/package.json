@@ -1,0 +1,73 @@
+{
+	"name": "ia-films",
+	"version": "1.0.0",
+	"description": "Public-domain feature films, movie serials and Prelinger shorts from the Internet Archive's movie collections, streamed as direct MP4/OGG downloads.",
+	"desc": "Public-domain feature films, movie serials and Prelinger shorts from the Internet Archive's movie collections, streamed as direct MP4/OGG downloads.",
+	"icon": "https://archive.org/favicon.ico",
+	"keywords": [
+		"movies",
+		"film",
+		"public domain",
+		"archive.org",
+		"video"
+	],
+	"tags": [
+		"movies",
+		"film",
+		"public domain",
+		"archive.org",
+		"video"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://archive.org/details/movies",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Video"
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"archive.org",
+				"www.archive.org"
+			]
+		}
+	],
+	"id": "426042eb-c87b-41d6-9d6c-2eae34540f19",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

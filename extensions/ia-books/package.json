@@ -1,0 +1,66 @@
+{
+	"name": "ia-books",
+	"version": "1.0.0",
+	"desc": "Browse and read openly downloadable public-domain books from the Internet Archive's Books & Texts collection.",
+	"icon": "https://archive.org/favicon.ico",
+	"tags": [
+		"archive.org",
+		"internet archive",
+		"books",
+		"public domain",
+		"texts"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"multilingual"
+	],
+	"nsfw": false,
+	"url": "https://archive.org/details/texts",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"archive.org",
+				"www.archive.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "78611dde-edb8-4cbe-ab23-65b3081f5cb6",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

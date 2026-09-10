@@ -1,0 +1,70 @@
+{
+	"name": "vorleser",
+	"version": "1.0.0",
+	"description": "Free German audiobooks from vorleser.net",
+	"desc": "Kostenlose deutsche Hörbücher von vorleser.net: public-domain texts (Grimm, Kafka, Jules Verne ...) read by volunteers, with curated browse categories, site search and per-book MP3 streams for private use.",
+	"icon": "https://www.vorleser.net/dist/default/media/favicons/apple-touch-icon.png",
+	"keywords": [
+		"audiobooks",
+		"dion"
+	],
+	"tags": [
+		"hörbücher",
+		"audiobooks",
+		"german",
+		"deutsch",
+		"public domain",
+		"audio"
+	],
+	"lang": [
+		"de"
+	],
+	"api_version": "*",
+	"nsfw": false,
+	"url": "https://www.vorleser.net/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"www.vorleser.net"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "7c2f144a-321e-4889-a74b-a2ace0f7893c",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

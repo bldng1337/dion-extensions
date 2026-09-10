@@ -1,0 +1,64 @@
+{
+	"name": "lit2go",
+	"version": "1.0.0",
+	"desc": "Free classic literature audiobooks with read-along passage text, chaptered per passage, from Lit2Go by the University of South Florida.",
+	"icon": "https://etc.usf.edu/favicon.ico",
+	"tags": [
+		"lit2go",
+		"audiobooks",
+		"classics",
+		"audio",
+		"education"
+	],
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://etc.usf.edu/lit2go/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"etc.usf.edu"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "8b460d59-4969-419c-a8ac-6297c0136d9e",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

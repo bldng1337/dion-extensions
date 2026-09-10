@@ -1,0 +1,69 @@
+{
+	"name": "escape-artists",
+	"version": "1.0.0",
+	"desc": "Narrated short science fiction, fantasy, and horror from the Escape Artists podcasts (Escape Pod, PodCastle, PseudoPod).",
+	"icon": "https://escapepod.org/wp-content/uploads/2018/03/cropped-Escape-Pod-chip-2-192x192.png",
+	"tags": [
+		"podcast",
+		"audio",
+		"science fiction",
+		"fantasy",
+		"horror",
+		"short stories"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://escapepod.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Audio"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"escapepod.org",
+				"podcastle.org",
+				"pseudopod.org",
+				"dts.podtrac.com",
+				"traffic.libsyn.com"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "3ff783ff-cb27-4efd-909d-84c79115fa74",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

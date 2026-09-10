@@ -1,0 +1,65 @@
+{
+	"name": "openstax",
+	"version": "1.0.0",
+	"desc": "Browse and download the free peer-reviewed OpenStax textbooks as PDF or EPUB.",
+	"icon": "https://openstax.org/favicon.ico",
+	"tags": [
+		"books",
+		"textbooks",
+		"openstax",
+		"education",
+		"open textbook"
+	],
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://openstax.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"openstax.org",
+				"assets.openstax.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"api_version": "*",
+	"id": "90c6efd8-9f39-453b-944a-497ed325583d",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}
