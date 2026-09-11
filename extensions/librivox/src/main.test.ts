@@ -103,14 +103,26 @@ describe("Extension", () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
 		if (browseResult === undefined || (browseResult?.length ?? 0) <= 0)
 			throw new Error("No browse result");
-		const result = await extension!.detail(browseResult[0]!.id, {});
+		// The newest items in the addeddate-desc listing sometimes have feeds
+		// LibriVox has not generated yet (the RSS endpoint redirects), so walk
+		// the first few entries until one resolves with chapters.
+		let detailed: Entry | undefined;
+		let result: EntryDetailedResult | undefined;
+		for (const entry of browseResult.slice(0, 5)) {
+			const candidate = await extension!.detail(entry.id, {});
+			if (candidate.entry.episodes.length > 0) {
+				detailed = entry;
+				result = candidate;
+				break;
+			}
+		}
 		expect(result).toBeDefined();
-		expect(result.entry.id.uid).toBe(browseResult[0]!.id.uid);
-		expect(result.entry.titles[0]!.length).toBeGreaterThan(0);
-		expect(result.entry.episodes.length).toBeGreaterThan(0);
-		expect(result.entry.description.length).toBeGreaterThan(0);
-		detailResult = result;
-	}, 120_000);
+		expect(result!.entry.id.uid).toBe(detailed!.id.uid);
+		expect(result!.entry.titles[0]!.length).toBeGreaterThan(0);
+		expect(result!.entry.episodes.length).toBeGreaterThan(0);
+		expect(result!.entry.description.length).toBeGreaterThan(0);
+		detailResult = result!;
+	}, 180_000);
 	it("should be able to source", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
 		if (detailResult === undefined || detailResult?.entry.episodes.length <= 0)

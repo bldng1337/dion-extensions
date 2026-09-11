@@ -1,0 +1,74 @@
+{
+	"name": "perseus",
+	"version": "1.0.0",
+	"desc": "Read the Greek and Latin classics (Homer, the tragedians, Vergil, Caesar and more) in the original from the Perseus Digital Library / Open Greek & Latin TEI corpora.",
+	"description": "Greek and Latin classics (Homer, the tragedians, Vergil, Caesar and more) from the Perseus Digital Library / Open Greek & Latin TEI corpora",
+	"icon": "https://avatars.githubusercontent.com/u/3920139?s=200&v=4",
+	"keywords": [
+		"greek",
+		"latin",
+		"classics",
+		"classical texts",
+		"perseus"
+	],
+	"api_version": "*",
+	"lang": [
+		"grc",
+		"la"
+	],
+	"nsfw": false,
+	"url": "https://github.com/PerseusDL",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"api.github.com",
+				"raw.githubusercontent.com"
+			]
+		}
+	],
+	"tags": [
+		"greek",
+		"latin",
+		"classics",
+		"classical texts",
+		"perseus"
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "4e1bdd99-e27a-4186-b89b-d4668bb4c93a",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

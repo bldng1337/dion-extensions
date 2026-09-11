@@ -1,0 +1,91 @@
+{
+	"name": "wikibooks",
+	"version": "1.0.0",
+	"description": "Read open-content textbooks and chapter pages from Wikibooks, the Wikimedia library of free learning materials.",
+	"icon": "https://en.wikibooks.org/favicon.ico",
+	"keywords": [
+		"wikibooks",
+		"dion"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"de",
+		"fr",
+		"es",
+		"it",
+		"pt",
+		"ru",
+		"zh",
+		"ja"
+	],
+	"nsfw": false,
+	"url": "https://www.wikibooks.org/",
+	"desc": "Read open-content textbooks and chapter pages from Wikibooks, the Wikimedia library of free learning materials, in nine languages.",
+	"tags": [
+		"books",
+		"wikibooks",
+		"textbooks",
+		"open content",
+		"education",
+		"learning",
+		"reading"
+	],
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"wikibooks.org",
+				"www.wikibooks.org",
+				"en.wikibooks.org",
+				"de.wikibooks.org",
+				"fr.wikibooks.org",
+				"es.wikibooks.org",
+				"it.wikibooks.org",
+				"pt.wikibooks.org",
+				"ru.wikibooks.org",
+				"zh.wikibooks.org",
+				"ja.wikibooks.org",
+				"upload.wikimedia.org",
+				"thumb.wikimedia.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "fa3388ad-a4fa-4b57-81fa-1a88fd002ac5",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

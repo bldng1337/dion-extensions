@@ -15,6 +15,24 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/alquran-cloud": {
+      "name": "alquran-cloud",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "extensions/anilist": {
       "name": "anilist",
       "version": "1.2.0",
@@ -158,6 +176,24 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/gutenberg-de": {
+      "name": "gutenberg-de",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "extensions/ia-books": {
       "name": "ia-books",
       "version": "1.0.0",
@@ -281,6 +317,24 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/mit-classics": {
+      "name": "mit-classics",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "extensions/novellist": {
       "name": "novellist",
       "version": "1.0.0",
@@ -318,6 +372,78 @@
     },
     "extensions/pepper-carrot": {
       "name": "pepper-carrot",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "extensions/perseus": {
+      "name": "perseus",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "extensions/project-aon": {
+      "name": "project-aon",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "extensions/sacred-texts": {
+      "name": "sacred-texts",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "extensions/scp-wiki": {
+      "name": "scp-wiki",
       "version": "1.0.0",
       "dependencies": {
         "@dion-js/runtime-lib": "catalog:",
@@ -408,6 +534,24 @@
     },
     "extensions/vorleser": {
       "name": "vorleser",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "extensions/wikibooks": {
+      "name": "wikibooks",
       "version": "1.0.0",
       "dependencies": {
         "@dion-js/runtime-lib": "catalog:",
@@ -580,6 +724,8 @@
 
     "ajv": ["ajv@6.15.0", "", { "dependencies": { "fast-deep-equal": "^3.1.1", "fast-json-stable-stringify": "^2.0.0", "json-schema-traverse": "^0.4.1", "uri-js": "^4.2.2" } }, "sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw=="],
 
+    "alquran-cloud": ["alquran-cloud@workspace:extensions/alquran-cloud"],
+
     "anilist": ["anilist@workspace:extensions/anilist"],
 
     "asn1": ["asn1@0.2.6", "", { "dependencies": { "safer-buffer": "~2.1.0" } }, "sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ=="],
@@ -646,6 +792,8 @@
 
     "gutenberg": ["gutenberg@workspace:extensions/gutenberg"],
 
+    "gutenberg-de": ["gutenberg-de@workspace:extensions/gutenberg-de"],
+
     "handlebars": ["handlebars@4.7.8", "", { "dependencies": { "minimist": "^1.2.5", "neo-async": "^2.6.2", "source-map": "^0.6.1", "wordwrap": "^1.0.0" }, "optionalDependencies": { "uglify-js": "^3.1.4" }, "bin": { "handlebars": "bin/handlebars" } }, "sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ=="],
 
     "har-schema": ["har-schema@2.0.0", "", {}, "sha512-Oqluz6zhGX8cyRaTQlFMPw80bSJVG2x/cFb8ZPhUILGgHka9SsokCCOQgpveePerqidZOrT14ipqfJb7ILcW5Q=="],
@@ -698,6 +846,8 @@
 
     "minimist": ["minimist@1.2.8", "", {}, "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA=="],
 
+    "mit-classics": ["mit-classics@workspace:extensions/mit-classics"],
+
     "neo-async": ["neo-async@2.6.2", "", {}, "sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw=="],
 
     "node-domexception": ["node-domexception@1.0.0", "", {}, "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="],
@@ -714,7 +864,11 @@
 
     "performance-now": ["performance-now@2.1.0", "", {}, "sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow=="],
 
+    "perseus": ["perseus@workspace:extensions/perseus"],
+
     "process": ["process@0.11.10", "", {}, "sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A=="],
+
+    "project-aon": ["project-aon@workspace:extensions/project-aon"],
 
     "psl": ["psl@1.15.0", "", { "dependencies": { "punycode": "^2.3.1" } }, "sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w=="],
 
@@ -728,9 +882,13 @@
 
     "request-promise-native": ["request-promise-native@1.0.9", "", { "dependencies": { "request-promise-core": "1.1.4", "stealthy-require": "^1.1.1", "tough-cookie": "^2.3.3" }, "peerDependencies": { "request": "^2.34" } }, "sha512-wcW+sIUiWnKgNY0dqCpOZkUbF/I+YPi+f09JZIDa39Ec+q82CpSYniDp+ISgTTbKmnpJWASeJBPZmoxH84wt3g=="],
 
+    "sacred-texts": ["sacred-texts@workspace:extensions/sacred-texts"],
+
     "safe-buffer": ["safe-buffer@5.2.1", "", {}, "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="],
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
+
+    "scp-wiki": ["scp-wiki@workspace:extensions/scp-wiki"],
 
     "source-map": ["source-map@0.6.1", "", {}, "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g=="],
 
@@ -771,6 +929,8 @@
     "vorleser": ["vorleser@workspace:extensions/vorleser"],
 
     "web-streams-polyfill": ["web-streams-polyfill@3.3.3", "", {}, "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="],
+
+    "wikibooks": ["wikibooks@workspace:extensions/wikibooks"],
 
     "wikisource": ["wikisource@workspace:extensions/wikisource"],
 

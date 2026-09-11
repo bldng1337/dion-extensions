@@ -1,0 +1,74 @@
+{
+	"name": "bible-api",
+	"version": "1.0.0",
+	"description": "Read the Bible in public-domain translations (WEB, KJV, BBE, Latin Vulgate and more) via the free bible-api.com JSON API.",
+	"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Gutenberg_Bible%2C_Lenox_Copy%2C_New_York_Public_Library%2C_2009._Pic_01.jpg/250px-Gutenberg_Bible%2C_Lenox_Copy%2C_New_York_Public_Library%2C_2009._Pic_01.jpg",
+	"keywords": [
+		"bible",
+		"scripture",
+		"religion",
+		"public domain"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"la",
+		"pt",
+		"ro",
+		"mul"
+	],
+	"nsfw": false,
+	"url": "https://bible-api.com/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"bible-api.com"
+			]
+		}
+	],
+	"tags": [
+		"bible",
+		"scripture",
+		"religion",
+		"public domain"
+	],
+	"desc": "Read the Bible in public-domain translations (WEB, KJV, BBE, Latin Vulgate and more) via the free bible-api.com JSON API.",
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "f37aa1f0-af98-4f75-b5e6-8a6d4c4b5fb6",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

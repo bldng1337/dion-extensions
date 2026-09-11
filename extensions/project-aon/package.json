@@ -1,0 +1,71 @@
+{
+	"name": "project-aon",
+	"version": "1.0.0",
+	"desc": "Lone Wolf and other classic interactive gamebooks from Project Aon, digitized with the authors' explicit permission.",
+	"description": "Lone Wolf and other classic interactive gamebooks from Project Aon, digitized with the authors' explicit permission.",
+	"icon": "https://www.projectaon.org/favicon.ico",
+	"keywords": [
+		"gamebooks",
+		"lone wolf",
+		"interactive fiction",
+		"joe dever"
+	],
+	"tags": [
+		"gamebooks",
+		"lone wolf",
+		"interactive fiction",
+		"joe dever"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://www.projectaon.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "38a325be-2e4a-4dbc-878b-5db9b9f4a00a",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"www.projectaon.org",
+				"projectaon.org"
+			]
+		}
+	],
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

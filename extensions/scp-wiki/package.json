@@ -1,0 +1,72 @@
+{
+	"name": "scp-wiki",
+	"version": "1.0.0",
+	"description": "SCP Foundation containment files — collaborative horror/sci-fi lore from the SCP Wiki",
+	"desc": "SCP Foundation containment files — collaborative horror/sci-fi lore from the SCP Wiki",
+	"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/SCP_Foundation_%28emblem%29.svg/250px-SCP_Foundation_%28emblem%29.svg.png",
+	"keywords": [
+		"scp",
+		"horror",
+		"fiction",
+		"creative writing",
+		"lore"
+	],
+	"tags": [
+		"scp",
+		"horror",
+		"fiction",
+		"creative writing",
+		"lore"
+	],
+	"api_version": "*",
+	"lang": [
+		"en"
+	],
+	"nsfw": false,
+	"url": "https://scp-wiki.wikidot.com/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "6cc5dbd8-baad-4232-afd4-faea96910eb8",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"scp-wiki.wikidot.com"
+			]
+		}
+	],
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}

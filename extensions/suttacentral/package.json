@@ -1,0 +1,78 @@
+{
+	"name": "suttacentral",
+	"version": "1.0.0",
+	"description": "Read the early Buddhist texts of SuttaCentral: sutta collections of the Pali canon with CC0 translations in several languages",
+	"icon": "https://suttacentral.net/img/favicon.ico",
+	"keywords": [
+		"buddhism",
+		"suttas",
+		"pali",
+		"religion",
+		"texts"
+	],
+	"api_version": "*",
+	"lang": [
+		"en",
+		"de",
+		"it",
+		"pl",
+		"pt",
+		"ru",
+		"sr",
+		"vi"
+	],
+	"nsfw": false,
+	"url": "https://suttacentral.net/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"suttacentral.net"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "dda38566-3fb0-4313-a44f-9de1c910fdc9",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	},
+	"desc": "Read the early Buddhist texts of SuttaCentral with CC0 translations, from the Dhammapada to the complete Nikayas.",
+	"tags": [
+		"buddhism",
+		"suttas",
+		"religion",
+		"texts"
+	]
+}

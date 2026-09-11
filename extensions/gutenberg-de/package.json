@@ -1,0 +1,65 @@
+{
+	"name": "gutenberg-de",
+	"version": "1.0.0",
+	"desc": "Deutschsprachige Klassiker (Goethe, Schiller, Kafka, Fontane u.a.) von Projekt Gutenberg-DE — Kapitel für Kapitel lesbar.",
+	"tags": [
+		"deutsch",
+		"german",
+		"klassiker",
+		"classics",
+		"public domain"
+	],
+	"icon": "https://projekt-gutenberg.org/wp-content/uploads/2026/01/cropped-Projekt-Gutenberg-Favicon-192x192.webp",
+	"api_version": "*",
+	"lang": [
+		"de"
+	],
+	"nsfw": false,
+	"url": "https://projekt-gutenberg.org/",
+	"extension_type": [
+		{
+			"type": "EntryProvider",
+			"has_search": true
+		}
+	],
+	"media_type": [
+		"Book"
+	],
+	"permissions": [
+		{
+			"type": "Network",
+			"domains": [
+				"projekt-gutenberg.org",
+				"www.projekt-gutenberg.org"
+			]
+		}
+	],
+	"authors": [
+		"bldng1337"
+	],
+	"license": "ISC",
+	"id": "bf19876c-7fbb-489e-917f-e7a47952aab0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"lint": "bunx biome check",
+		"format": "bunx biome format --write",
+		"build": "bunx dion-bundle",
+		"check-types": "bunx tsc --noEmit"
+	},
+	"dependencies": {
+		"@dion-js/runtime-lib": "catalog:",
+		"valibot": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@biomejs/biome": "catalog:",
+		"@dion-js/runtime": "catalog:",
+		"@dion-js/runtime-types": "catalog:",
+		"@dion-js/extension-types": "catalog:",
+		"@dion-js/config": "catalog:",
+		"typescript": "catalog:",
+		"@dion-js/extension-test-utils": "catalog:"
+	}
+}
