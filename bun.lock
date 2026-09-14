@@ -607,7 +607,7 @@
   },
   "overrides": {
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.4.0",
+    "@dion-js/extension-scripts": "0.6.0",
     "@dion-js/extension-test-utils": "0.3.0",
     "@dion-js/extension-types": "0.11.0",
     "@dion-js/runtime": "1.11.0",
@@ -617,7 +617,7 @@
   "catalog": {
     "@biomejs/biome": "2.5.11",
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.4.0",
+    "@dion-js/extension-scripts": "0.6.0",
     "@dion-js/extension-test-utils": "0.3.0",
     "@dion-js/extension-types": "0.11.0",
     "@dion-js/runtime": "1.11.0",
@@ -650,7 +650,7 @@
 
     "@dion-js/config": ["@dion-js/config@0.1.0", "", {}, "sha512-2sZ7uT+ycxw0LpxBjN46HcOiNRWtxNaQ8gOApoE9BF9a6ONFmoF+7FDUhYbTsHpTezV6WGTiAtD3MejeAl/XMw=="],
 
-    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.4.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "handlebars": "4.7.8", "valibot": "catalog:" }, "bin": { "dion-bundle": ".dist/bundle.js", "dion-build-index": ".dist/index.js", "dion-create": ".dist/create.js" } }, "sha512-pAD9QEVn02DYIvz4+c7Xl+E12w+gAumbq4uSdVKzKHUlyZl9SqPnDfLtW/dSqiK/nI795t09zgLP6118vFK2Rg=="],
+    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.6.0", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0", "handlebars": "4.7.8", "valibot": "1.2.0" }, "bin": { "dion-bundle": "bin/bundle.ts", "dion-create": "bin/create.ts", "dion-build-site": "bin/site.ts", "dion-build-index": "bin/index.ts" } }, "sha512-o6geyO7vU87HPKTkqJrwaC00vK4VRxh/geI5SYG3Wm0PpQs1t50LjlitPqYl2PJpU5W8W8/0YWD2qthqoaRl/g=="],
 
     "@dion-js/extension-test-utils": ["@dion-js/extension-test-utils@0.3.0", "", { "dependencies": { "@dion-js/extension-types": "workspace:*", "@dion-js/runtime-types": "workspace:*", "image-url-validator": "^1.0.4", "m3u8-parser": "^7.2.0", "node-fetch": "^3.3.2" } }, "sha512-jomwzaSUylVVRb5pedEpstLSZSkbp8XjTG7/G4ZzPRpM8pFWGS7sKNabY+sUd3mqmTGX+32IQFXKnYOY8n0fxQ=="],
 
@@ -937,5 +937,7 @@
     "wordwrap": ["wordwrap@1.0.0", "", {}, "sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q=="],
 
     "xkcd": ["xkcd@workspace:extensions/xkcd"],
+
+    "@dion-js/extension-scripts/valibot": ["valibot@1.2.0", "", { "peerDependencies": { "typescript": ">=5" }, "optionalPeers": ["typescript"] }, "sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg=="],
   }
 }
