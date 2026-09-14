@@ -19,14 +19,6 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"]
-    },
-    "pushdev": {
-      "dependsOn": ["build"],
-      "cache": false
-    },
-    "push": {
-      "dependsOn": ["build"],
-      "cache": false
     }
   }
 }
