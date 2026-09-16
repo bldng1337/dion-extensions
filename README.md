@@ -1,5 +1,5 @@
 ## Dion Media Extensions Monorepo
-This repository contains the extension monorepo for [dion](https://github.com/bldng1337/dion).
+This repository contains the extension monorepo for [dion](https://github.com/bldng1337/dion). Click [here](dion://repo/add?url=https%3A%2F%2Fgithub.com%2Fbldng1337%2Fdion-extensions%2Freleases%2Fdownload%2Fextensions%2Findex.repo.json) to add the extensions to the app, and click [here](https://bldng1337.github.io/dion-extensions/) to browse the extensions in your browser.
 
 ### Prerequisites
 - Bun. Install from `https://bun.sh`.
