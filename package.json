@@ -39,7 +39,7 @@
 		"@dion-js/runtime": "1.11.0",
 		"@dion-js/config": "0.1.0",
 		"@dion-js/runtime-lib": "0.9.0",
-		"@dion-js/extension-scripts": "0.6.1",
+		"@dion-js/extension-scripts": "0.6.2",
 		"@dion-js/extension-test-utils": "0.3.0",
 		"typescript": "7.0.2",
 		"@biomejs/biome": "2.5.11",
@@ -52,7 +52,7 @@
 		"@dion-js/runtime": "1.11.0",
 		"@dion-js/config": "0.1.0",
 		"@dion-js/runtime-lib": "0.9.0",
-		"@dion-js/extension-scripts": "0.6.1",
+		"@dion-js/extension-scripts": "0.6.2",
 		"@dion-js/extension-test-utils": "0.3.0"
 	},
 	"dependencies": {
