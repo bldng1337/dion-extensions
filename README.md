@@ -1,10 +1,5 @@
 ## Dion Media Extensions Monorepo
-
-This repository contains the extension monorepo for [dion](https://github.com/bldng1337/dion). It holds the extensions (33 sources for books, comics, audio, and video) and the CI that builds, tests, and publishes them. Shared libraries and build tooling live in the published `@dion-js` npm packages.
-
-### Contents
-- `extensions/*`: One directory per extension, each with build, test, lint, and type-check scripts
-- `.github/workflows`: CI that builds all extensions, publishes the bundles to a GitHub release, and deploys the index site to GitHub Pages
+This repository contains the extension monorepo for [dion](https://github.com/bldng1337/dion).
 
 ### Prerequisites
 - Bun. Install from `https://bun.sh`.
