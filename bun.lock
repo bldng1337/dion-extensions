@@ -299,6 +299,23 @@
         "typescript": "catalog:",
       },
     },
+    "extensions/local-sources": {
+      "name": "local-sources",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dion-js/runtime-lib": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@dion-js/config": "catalog:",
+        "@dion-js/extension-test-utils": "catalog:",
+        "@dion-js/extension-types": "catalog:",
+        "@dion-js/runtime": "catalog:",
+        "@dion-js/runtime-types": "catalog:",
+        "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "extensions/loyal-books": {
       "name": "loyal-books",
       "version": "1.0.0",
@@ -609,20 +626,20 @@
     "@dion-js/config": "0.1.0",
     "@dion-js/extension-scripts": "0.6.2",
     "@dion-js/extension-test-utils": "0.3.0",
-    "@dion-js/extension-types": "0.11.0",
-    "@dion-js/runtime": "1.11.0",
-    "@dion-js/runtime-lib": "0.9.0",
-    "@dion-js/runtime-types": "0.10.0",
+    "@dion-js/extension-types": "0.13.0",
+    "@dion-js/runtime": "1.13.1",
+    "@dion-js/runtime-lib": "0.12.0",
+    "@dion-js/runtime-types": "0.12.1",
   },
   "catalog": {
     "@biomejs/biome": "2.5.11",
     "@dion-js/config": "0.1.0",
     "@dion-js/extension-scripts": "0.6.2",
     "@dion-js/extension-test-utils": "0.3.0",
-    "@dion-js/extension-types": "0.11.0",
-    "@dion-js/runtime": "1.11.0",
-    "@dion-js/runtime-lib": "0.9.0",
-    "@dion-js/runtime-types": "0.10.0",
+    "@dion-js/extension-types": "0.13.0",
+    "@dion-js/runtime": "1.13.1",
+    "@dion-js/runtime-lib": "0.12.0",
+    "@dion-js/runtime-types": "0.12.1",
     "@types/bun": "1.4.0",
     "typescript": "7.0.2",
     "valibot": "1.4.2",
@@ -654,13 +671,13 @@
 
     "@dion-js/extension-test-utils": ["@dion-js/extension-test-utils@0.3.0", "", { "dependencies": { "@dion-js/extension-types": "workspace:*", "@dion-js/runtime-types": "workspace:*", "image-url-validator": "^1.0.4", "m3u8-parser": "^7.2.0", "node-fetch": "^3.3.2" } }, "sha512-jomwzaSUylVVRb5pedEpstLSZSkbp8XjTG7/G4ZzPRpM8pFWGS7sKNabY+sUd3mqmTGX+32IQFXKnYOY8n0fxQ=="],
 
-    "@dion-js/extension-types": ["@dion-js/extension-types@0.11.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*", "valibot": "catalog:" } }, "sha512-zOJP7qkp8E22E4DA/grZLfaL2LyBM+qm22tmk0jIB2y3DPs6ccMBiTKxblsqoWfj/FftHs1ABuQ+KyDzx0te+A=="],
+    "@dion-js/extension-types": ["@dion-js/extension-types@0.13.0", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0", "valibot": "1.2.0" } }, "sha512-P76JS1CaRFLZS/m/Kw3LnvTEEArxbLR8IWQ2fmMDgroWsRmNq8zvCPcbiZHe/LbV4My7/8mrZV4CRMduftWldg=="],
 
-    "@dion-js/runtime": ["@dion-js/runtime@1.11.0", "", { "dependencies": { "@dion-js/runtime-types": "workspace:*" } }, "sha512-XU0iox2vYN8hBTP+Lj7NhP68nzSFxTch7bkYNLZ3/sujUv66a5S76+d0XgfyGWUxF230pLumMllSZxubKw+X7Q=="],
+    "@dion-js/runtime": ["@dion-js/runtime@1.13.1", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0" } }, "sha512-8uxHk7dzEB7VG9WDZpqXxAbnnVrXiRMcDsv4A39G3pvzJfFAbkwKViA09H2J0HzkIXHEc2JcNF5cidtvAXyqDQ=="],
 
-    "@dion-js/runtime-lib": ["@dion-js/runtime-lib@0.9.0", "", {}, "sha512-9uUH7f0a78mYwdomoqal+2gjZh5N3cUk6ND6XPPc06DOcHM24EDKszce7fKDiHMsyWWXDlBYz+GaoW5HtdRYxg=="],
+    "@dion-js/runtime-lib": ["@dion-js/runtime-lib@0.12.0", "", {}, "sha512-QAyB5/pNxrxwOqiNI3V337Two4CjtjhZBzdyUiTBsBoi/aaL47sFFbSBkovWwOTR237IjyG9fpJnb8dC/Xrm/A=="],
 
-    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.10.0", "", {}, "sha512-RxYFdMrV5XZAbiHkiCGqFkFVt9QOkduEqaAus9sHkwFJatslEAIOPt/z6GZaCsDq0risdO0fnkCU8hKOj6E4Pw=="],
+    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.12.1", "", {}, "sha512-/mdf30YG6LEsr3AxqqqUrNhmkL/Smx84bMFxpS0/EaCmRx5lXBsvfnKa4dvDU8B+S4B6Lx5/e+Vkvlbe3xpiaQ=="],
 
     "@turbo/darwin-64": ["@turbo/darwin-64@2.10.12", "", { "os": "darwin", "cpu": "x64" }, "sha512-9nKgKoF6ZOUsM+or0OtNf+TTJSfGvDNP7ZFv/ZGWVwOSCkumyctQiTeHwB4UNljHTnC41AqylgbunLDHoccNrA=="],
 
@@ -832,6 +849,8 @@
 
     "lit2go": ["lit2go@workspace:extensions/lit2go"],
 
+    "local-sources": ["local-sources@workspace:extensions/local-sources"],
+
     "lodash": ["lodash@4.18.1", "", {}, "sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q=="],
 
     "loyal-books": ["loyal-books@workspace:extensions/loyal-books"],
@@ -939,5 +958,7 @@
     "xkcd": ["xkcd@workspace:extensions/xkcd"],
 
     "@dion-js/extension-scripts/valibot": ["valibot@1.2.0", "", { "peerDependencies": { "typescript": ">=5" }, "optionalPeers": ["typescript"] }, "sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg=="],
+
+    "@dion-js/extension-types/valibot": ["valibot@1.2.0", "", { "peerDependencies": { "typescript": ">=5" }, "optionalPeers": ["typescript"] }, "sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg=="],
   }
 }

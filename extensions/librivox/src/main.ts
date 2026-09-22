@@ -536,6 +536,7 @@ export default class extends DionExtension implements SourceProvider {
 						url: { url: chapter.url },
 					},
 				],
+				chapters: null,
 			},
 		};
 	}

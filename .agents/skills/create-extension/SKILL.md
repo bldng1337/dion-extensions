@@ -176,12 +176,29 @@ These are **external** — import them, do not bundle them. Ambient types come f
 - `network` — `fetch(url, options?)`, `getCookies()`, `getProxyAddress()`. `fetch` returns a
   `DionResponse` with `status`, `headers`, `body` (string), `json`, `ok`. Cookies are managed
   automatically by the host's cookie jar.
+- `cache` — persistent, per-extension caches living below the extension data dir (they survive
+  restarts). `openKvCache(name, { defaultTtl? })` for KV caches with optional TTL (seconds;
+  per-`set` override: `set(key, value, ttlSeconds)`), `openLruCache(name, { maxEntries?, maxBytes?,
+  defaultTtl? })` for LRU caches that evict the least recently used entry when a limit is exceeded.
+  Both return a `Cache` with `get/peek/set/has/delete/keys/size/clear` (all async except opening).
+  Values may be any JSON value or a `Uint8Array` (stored/restored as raw bytes); expired or evicted
+  entries read back as `undefined`.
+- `filesystem` — permission-gated file access. `getDataDir()` returns the extension's private
+  directory (no permission needed below it — also where you should put large scratch data);
+  `readTextFile`/`readFile`/`writeTextFile`/`writeFile`/`deleteFile`/`exists`/`stat`/`createDir`/
+  `removeDir`/`readDir`/`joinPaths`. Anything outside the data dir requires a
+  `{ type: "Storage", path, write }` permission: the runtime prompts the user once per directory
+  (write ops need `write: true`). Ask up front via `permission.requestPermission` for a user-picked
+  directory (see the `DirectoryPicker` setting UI) so later file ops never prompt.
 - `parse` — `parseHtml(input)`, `parseHtmlFragment(input)`. Returns a `DionElement` tree
   with jQuery-like `select(new CSSSelector("div.foo"))`, `attr`, `children`, `text`,
   `paragraphs`. `DionElementArray` supports `map/filter/get/first/length`.
 - `setting` — `getSetting(id, kind)`, `registerSetting(id, setting, kind)`,
   `setEntrySetting(entry, key, value)`. `kind` is `"Extension" | "Search"`. Prefer the typed
-  helpers in `@dion-js/runtime-lib` (`ExtensionSetting`, `SettingStore`).
+  helpers in `@dion-js/runtime-lib` (`ExtensionSetting`, `SettingStore`). A setting with the
+  `Directory` UI (`new DirectoryPicker(write?)` from `runtime-lib/settings`) is rendered by the
+  host as a system directory picker; its string value is the picked directory's filesystem path —
+  use it with the `filesystem` module (grant Storage permission once, then read/write below it).
 - `auth` — `mergeAuth(account)`, `isLoggedIn(domain)`, `invalidate(domain)`,
   `getAuthSecret(domain)`. Prefer `AuthAccount` from `runtime-lib`.
 - `permission` — `requestPermission(permission, msg?)`, `hasPermission(permission)`.
@@ -295,6 +312,28 @@ root run `dion-build-index`. It copies each built file into `.index/<name>.dion.
 writes `.index/index.repo.json` (schema `DionRepoIndex`: `repo_index_version: 1`, repo
 fields, and `content: [{ path, extdata }]`). The repo `url` is read from the repo
 `package.json` (falling back to `git remote get-url origin`).
+
+## Repository website
+`dion-build-site` (run from the repo root, after `dion-build-index`) generates a static
+website from `.index/` into `.site/` — a single self-contained `index.html` (search,
+media-type filters, NSFW toggle) plus the copied bundles and index, ready for GitHub
+Pages. It embeds deep links for the dion app:
+
+- **Add repository**: `dion://repo/add?url=<encoded index.repo.json URL>`
+- **Install extension**: `dion://extension/install?url=<encoded .dion.js URL>`
+
+By default the links target the GitHub release asset hosting
+(`https://github.com/<owner>/<repo>/releases/download/<tag>/index.repo.json`, tag
+defaults to `extensions`), derived from the repo `url` or git remote. Override with
+`--index-url <url>` (e.g. when serving `.index/` from Pages or another host); install
+URLs are resolved relative to the index URL, exactly like the runtime does. If the app
+is not installed, the site shows a fallback dialog with a copyable link.
+
+One-time setup in a repository: `dion-build-site --init` writes
+`.github/workflows/site.yml` (build → index → site → deploy to GitHub Pages on push) and
+a `build-site` npm script. Enable GitHub Pages with source "GitHub Actions" once in the
+repo settings. Useful flags: `--source <dir>`, `--out <dir>`, `--release-tag <tag>`,
+`--force`.
 
 ## Worked example checklist
 

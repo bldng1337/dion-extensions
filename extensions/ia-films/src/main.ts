@@ -380,6 +380,7 @@ export default class extends DionExtension implements SourceProvider {
 					},
 				],
 				sub: [],
+				chapters: null,
 			},
 		};
 	}

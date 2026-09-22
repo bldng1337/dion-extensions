@@ -349,6 +349,7 @@ export default class extends DionExtension implements SourceProvider {
 			source: {
 				type: "Audio",
 				sources: [{ name: show.label, lang: "en", url: { url: mp3 } }],
+				chapters: null,
 			},
 		};
 	}

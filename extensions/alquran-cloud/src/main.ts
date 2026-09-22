@@ -330,7 +330,7 @@ export default class extends DionExtension implements SourceProvider {
 			);
 		}
 		return {
-			source: { type: "Audio", sources },
+			source: { type: "Audio", sources, chapters: null },
 			settings: { ...settings },
 		};
 	}

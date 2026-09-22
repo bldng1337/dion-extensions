@@ -330,6 +330,7 @@ export default class extends DionExtension implements SourceProvider {
 						url: { url: fileUrl(identifier, fileName) },
 					},
 				],
+				chapters: null,
 			},
 		};
 	}
