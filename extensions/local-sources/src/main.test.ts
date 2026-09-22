@@ -1,0 +1,296 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: These are tests so if they fail it is fine */
+/// <reference types="@types/bun" />
+import { beforeAll, describe, expect, it } from "bun:test";
+import {
+	getTestExtension,
+	MockManagerClient,
+} from "@dion-js/extension-test-utils";
+import type { Extension } from "@dion-js/runtime";
+import { join } from "node:path";
+import {
+	filterByTitle,
+	filesFromListing,
+	humanSize,
+	kindForFilename,
+	naturalCompare,
+	paginate,
+	pathToFileUrl,
+	scanLibrary,
+	textToParagraphs,
+	titleFromFilename,
+	type Listing,
+	type ReadDirFn,
+} from "./library.ts";
+
+// ---------------------------------------------------------------------------
+// Library helpers (pure)
+// ---------------------------------------------------------------------------
+
+const file = (name: string) => ({ name, isDir: false });
+const folder = (name: string) => ({ name, isDir: true });
+
+/** In-memory readDir over a map of directory path → listing. */
+function fakeFs(listings: Record<string, Listing>) {
+	const visited: string[] = [];
+	const readDir: ReadDirFn = async (path) => {
+		visited.push(path);
+		const listing = listings[path];
+		if (listing === undefined) throw new Error(`ENOENT: ${path}`);
+		return listing;
+	};
+	return { readDir, visited };
+}
+
+const ROOT_LISTING: Record<string, Listing> = {
+	"/lib": [
+		file("cover.jpg"),
+		file(".hidden.epub"),
+		folder(".git"),
+		folder("empty-dir"),
+		file("Notes.txt"),
+		file("Standalone Novel.epub"),
+		folder("Series A"),
+		folder("Deep"),
+	],
+	"/lib/Series A": [
+		file("Chapter 10.epub"),
+		file("Chapter 2.epub"),
+		file("Chapter 1.epub"),
+		file("cover.jpg"),
+		folder("Extras"),
+	],
+	"/lib/Series A/Extras": [file("bonus.pdf")],
+	"/lib/Deep": [folder("OnlyDirs")],
+	"/lib/Deep/OnlyDirs": [file("Book Two.pdf")],
+	"/lib/empty-dir": [],
+};
+
+describe("naming helpers", () => {
+	it("should detect supported file kinds", () => {
+		expect(kindForFilename("Book.EPUB")).toBe("epub");
+		expect(kindForFilename("scan.PDF")).toBe("pdf");
+		expect(kindForFilename("notes.txt")).toBe("txt");
+		expect(kindForFilename("cover.jpg")).toBeNull();
+		expect(kindForFilename("cover")).toBeNull();
+		expect(kindForFilename("archive.zip")).toBeNull();
+	});
+
+	it("should derive titles from filenames", () => {
+		expect(titleFromFilename("Pride and Prejudice.epub")).toBe(
+			"Pride and Prejudice",
+		);
+		expect(titleFromFilename("Vol. 2.pdf")).toBe("Vol. 2");
+		expect(titleFromFilename("No Extension")).toBe("No Extension");
+		expect(titleFromFilename(".hidden.epub")).toBe(".hidden");
+	});
+
+	it("should build file:// urls in Dion's local-file wire format", () => {
+		expect(pathToFileUrl("/home/user/my book.epub")).toBe(
+			"file:///home/user/my book.epub",
+		);
+		expect(pathToFileUrl("C:\\Users\\user\\book.pdf")).toBe(
+			"file://C:\\Users\\user\\book.pdf",
+		);
+	});
+
+	it("should sort naturally so numbers read in order", () => {
+		const names = ["Chapter 10", "chapter 2", "Chapter 1", "Appendix"];
+		expect([...names].sort(naturalCompare)).toEqual([
+			"Appendix",
+			"Chapter 1",
+			"chapter 2",
+			"Chapter 10",
+		]);
+		// Numerically equal runs tie; length breaks the tie deterministically.
+		expect(naturalCompare("ch 2", "ch 02")).toBeLessThan(0);
+		expect(naturalCompare("ch 02", "ch 2")).toBeGreaterThan(0);
+		expect(naturalCompare("abc", "abd")).toBeLessThan(0);
+		expect(naturalCompare("ABC", "abd")).toBeLessThan(0);
+	});
+});
+
+describe("scanLibrary", () => {
+	it("should group loose files and folders into entries", async () => {
+		const { readDir } = fakeFs(ROOT_LISTING);
+		const entries = await scanLibrary("/lib", readDir);
+		expect(entries.map((entry) => entry.title)).toEqual([
+			"Extras",
+			"Notes",
+			"OnlyDirs",
+			"Series A",
+			"Standalone Novel",
+		]);
+		expect(entries.map((entry) => entry.uid)).toEqual([
+			"Series A/Extras/",
+			"Notes.txt",
+			"Deep/OnlyDirs/",
+			"Series A/",
+			"Standalone Novel.epub",
+		]);
+
+		const series = entries.find((entry) => entry.title === "Series A");
+		expect(series?.isFolder).toBe(true);
+		expect(series?.files.map((f) => f.title)).toEqual([
+			"Chapter 1",
+			"Chapter 2",
+			"Chapter 10",
+		]);
+		expect(series?.files.map((f) => f.rel)).toEqual([
+			"Series A/Chapter 1.epub",
+			"Series A/Chapter 2.epub",
+			"Series A/Chapter 10.epub",
+		]);
+
+		const notes = entries.find((entry) => entry.title === "Notes");
+		expect(notes?.isFolder).toBe(false);
+		expect(notes?.files).toEqual([
+			{ rel: "Notes.txt", title: "Notes", kind: "txt" },
+		]);
+
+		const extras = entries.find((entry) => entry.title === "Extras");
+		expect(extras?.uid).toBe("Series A/Extras/");
+		expect(extras?.files[0]?.kind).toBe("pdf");
+	});
+
+	it("should ignore hidden, empty and unsupported content", async () => {
+		const { readDir, visited } = fakeFs(ROOT_LISTING);
+		const entries = await scanLibrary("/lib", readDir);
+		expect(entries.some((entry) => entry.title.includes("cover"))).toBe(false);
+		expect(entries.some((entry) => entry.title.includes("hidden"))).toBe(false);
+		expect(entries.some((entry) => entry.title === "empty-dir")).toBe(false);
+		expect(entries.some((entry) => entry.title === "Deep")).toBe(false);
+		expect(visited).not.toContain("/lib/.git");
+	});
+
+	it("should propagate read errors", async () => {
+		const { readDir } = fakeFs({});
+		await expect(scanLibrary("/missing", readDir)).rejects.toThrow("ENOENT");
+	});
+});
+
+describe("filesFromListing", () => {
+	it("should keep only supported files, naturally sorted", () => {
+		const listing: Listing = [
+			folder("subdir"),
+			file("b.txt"),
+			file(".dotfile"),
+			file("a 10.epub"),
+			file("a 2.epub"),
+			file("image.png"),
+		];
+		const files = filesFromListing("dir", listing);
+		expect(files.map((f) => f.rel)).toEqual([
+			"dir/a 2.epub",
+			"dir/a 10.epub",
+			"dir/b.txt",
+		]);
+	});
+});
+
+describe("paging and searching", () => {
+	it("should paginate", () => {
+		const items = Array.from({ length: 75 }, (_, i) => i);
+		expect(paginate(items, 0)).toEqual({
+			content: items.slice(0, 30),
+			hasnext: true,
+		});
+		expect(paginate(items, 1).content[0]).toBe(30);
+		expect(paginate(items, 2)).toEqual({
+			content: items.slice(60, 75),
+			hasnext: false,
+		});
+		expect(paginate(items, 3)).toEqual({ content: [], hasnext: false });
+		expect(paginate(items, -1).content.length).toBe(30);
+	});
+
+	it("should filter titles case-insensitively", () => {
+		const items = [
+			{ title: "Pride" },
+			{ title: "prejudice" },
+			{ title: "Emma" },
+		];
+		expect(filterByTitle(items, "de")).toEqual([{ title: "Pride" }]);
+		expect(filterByTitle(items, "  pr  ")).toEqual([
+			{ title: "Pride" },
+			{ title: "prejudice" },
+		]);
+		expect(filterByTitle(items, "")).toEqual([]);
+		expect(filterByTitle(items, "zzz")).toEqual([]);
+	});
+});
+
+describe("presentation helpers", () => {
+	it("should format sizes", () => {
+		expect(humanSize(512)).toBe("512 B");
+		expect(humanSize(1536)).toBe("1.5 KB");
+		expect(humanSize(5 * 1024 * 1024)).toBe("5.0 MB");
+		expect(humanSize(10 * 1024 * 1024)).toBe("10 MB");
+	});
+
+	it("should split text into reflowable paragraphs", () => {
+		const text =
+			"Para one\r\nwrapped line.\r\n\r\nPara two.\n\n\n   \nPara three.";
+		expect(textToParagraphs(text)).toEqual([
+			{ type: "Text", content: "Para one wrapped line.", style: null },
+			{ type: "Text", content: "Para two.", style: null },
+			{ type: "Text", content: "Para three.", style: null },
+		]);
+		expect(textToParagraphs("   \n\n  ")).toEqual([]);
+		expect(textToParagraphs("single")).toEqual([
+			{ type: "Text", content: "single", style: null },
+		]);
+	});
+});
+
+// ---------------------------------------------------------------------------
+// Extension (through the native test runtime)
+// ---------------------------------------------------------------------------
+
+let extension: Extension;
+
+beforeAll(async () => {
+	const client = new MockManagerClient(join(import.meta.path, "../../.dist"));
+	extension = await getTestExtension(client.client);
+});
+
+describe("Extension", () => {
+	it("should start", async () => {
+		await extension!.setEnabled(true);
+		const data = await extension!.getData();
+		expect(data.compatible).toBe(true);
+		expect(extension.enabled).toBe(true);
+		expect(data.media_type).toEqual(["Book"]);
+		const provider = data.extension_type.find(
+			(variant) => variant.type === "EntryProvider",
+		);
+		expect(provider).toEqual({ type: "EntryProvider", has_search: true });
+	});
+
+	it("should not declare network permissions", async () => {
+		const data = await extension!.getData();
+		expect(data.permissions?.length ?? 0).toBe(0);
+	});
+
+	it("should browse to an empty list while no folder is configured", async () => {
+		const result = await extension!.browse(0);
+		expect(result.content).toEqual([]);
+		expect(result.hasnext).toBe(false);
+	});
+
+	it("should search to an empty list while no folder is configured", async () => {
+		expect((await extension!.search(0, "anything")).content).toEqual([]);
+		expect((await extension!.search(0, "   ")).content).toEqual([]);
+	});
+
+	it("should reject detail while no folder is configured", async () => {
+		await expect(
+			extension!.detail({ uid: "Some Series/" }, {}),
+		).rejects.toThrow("No library folder configured");
+	});
+
+	it("should reject source while no folder is configured", async () => {
+		await expect(extension!.source({ uid: "file.epub" }, {})).rejects.toThrow(
+			"No library folder configured",
+		);
+	});
+});
