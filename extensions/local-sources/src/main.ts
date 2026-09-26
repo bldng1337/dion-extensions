@@ -25,6 +25,7 @@ import {
 	filesFromListing,
 	humanSize,
 	kindForFilename,
+	mediaTypeForFiles,
 	paginate,
 	pathToFileUrl,
 	scanLibrary,
@@ -98,7 +99,7 @@ export default class extends DionExtension implements SourceProvider {
 			id: { uid: scanned.uid },
 			url: pathToFileUrl(joinPaths([root, target])),
 			title: scanned.title,
-			media_type: "Book",
+			media_type: mediaTypeForFiles(scanned.files),
 		};
 	}
 
@@ -164,7 +165,7 @@ export default class extends DionExtension implements SourceProvider {
 			id: { uid },
 			url: pathToFileUrl(joinPaths([root, name])),
 			titles: [title],
-			media_type: "Book",
+			media_type: mediaTypeForFiles(files),
 			status: "Complete",
 			description,
 			language: "",
@@ -187,6 +188,7 @@ export default class extends DionExtension implements SourceProvider {
 			throw new Error(`Unsupported file: ${rel}`);
 		}
 		const fileAbs = joinPaths([root, rel]);
+		const url = { url: pathToFileUrl(fileAbs) };
 		switch (kind) {
 			case "epub":
 				return {
@@ -203,6 +205,25 @@ export default class extends DionExtension implements SourceProvider {
 					source: {
 						type: "Paragraphlist",
 						paragraphs: textToParagraphs(await readTextFile(fileAbs)),
+					},
+					settings: { ...settings },
+				};
+			case "mp3":
+				return {
+					source: {
+						type: "Audio",
+						sources: [{ name: "Local", lang: "", url }],
+						chapters: null,
+					},
+					settings: { ...settings },
+				};
+			case "mp4":
+				return {
+					source: {
+						type: "Video",
+						sources: [{ name: "Local", lang: "", url }],
+						sub: [],
+						chapters: null,
 					},
 					settings: { ...settings },
 				};

@@ -12,6 +12,7 @@ import {
 	filesFromListing,
 	humanSize,
 	kindForFilename,
+	mediaTypeForFiles,
 	naturalCompare,
 	paginate,
 	pathToFileUrl,
@@ -50,6 +51,7 @@ const ROOT_LISTING: Record<string, Listing> = {
 		file("Notes.txt"),
 		file("Standalone Novel.epub"),
 		folder("Series A"),
+		folder("Album"),
 		folder("Deep"),
 	],
 	"/lib/Series A": [
@@ -58,6 +60,11 @@ const ROOT_LISTING: Record<string, Listing> = {
 		file("Chapter 1.epub"),
 		file("cover.jpg"),
 		folder("Extras"),
+	],
+	"/lib/Album": [
+		file("track 02.mp3"),
+		file("track 01.mp3"),
+		file("trailer.mp4"),
 	],
 	"/lib/Series A/Extras": [file("bonus.pdf")],
 	"/lib/Deep": [folder("OnlyDirs")],
@@ -70,6 +77,8 @@ describe("naming helpers", () => {
 		expect(kindForFilename("Book.EPUB")).toBe("epub");
 		expect(kindForFilename("scan.PDF")).toBe("pdf");
 		expect(kindForFilename("notes.txt")).toBe("txt");
+		expect(kindForFilename("song.MP3")).toBe("mp3");
+		expect(kindForFilename("movie.mp4")).toBe("mp4");
 		expect(kindForFilename("cover.jpg")).toBeNull();
 		expect(kindForFilename("cover")).toBeNull();
 		expect(kindForFilename("archive.zip")).toBeNull();
@@ -114,6 +123,7 @@ describe("scanLibrary", () => {
 		const { readDir } = fakeFs(ROOT_LISTING);
 		const entries = await scanLibrary("/lib", readDir);
 		expect(entries.map((entry) => entry.title)).toEqual([
+			"Album",
 			"Extras",
 			"Notes",
 			"OnlyDirs",
@@ -121,6 +131,7 @@ describe("scanLibrary", () => {
 			"Standalone Novel",
 		]);
 		expect(entries.map((entry) => entry.uid)).toEqual([
+			"Album/",
 			"Series A/Extras/",
 			"Notes.txt",
 			"Deep/OnlyDirs/",
@@ -150,6 +161,13 @@ describe("scanLibrary", () => {
 		const extras = entries.find((entry) => entry.title === "Extras");
 		expect(extras?.uid).toBe("Series A/Extras/");
 		expect(extras?.files[0]?.kind).toBe("pdf");
+
+		const album = entries.find((entry) => entry.title === "Album");
+		expect(album?.files.map((f) => f.rel)).toEqual([
+			"Album/track 01.mp3",
+			"Album/track 02.mp3",
+			"Album/trailer.mp4",
+		]);
 	});
 
 	it("should ignore hidden, empty and unsupported content", async () => {
@@ -184,6 +202,22 @@ describe("filesFromListing", () => {
 			"dir/a 10.epub",
 			"dir/b.txt",
 		]);
+	});
+});
+
+describe("media types", () => {
+	const of = (kind: "epub" | "pdf" | "txt" | "mp3" | "mp4") => ({
+		rel: `f.${kind}`,
+		title: "f",
+		kind,
+	});
+
+	it("should pick the entry media type from the contained files", () => {
+		expect(mediaTypeForFiles([])).toBe("Book");
+		expect(mediaTypeForFiles([of("epub"), of("txt")])).toBe("Book");
+		expect(mediaTypeForFiles([of("epub"), of("mp3")])).toBe("Audio");
+		expect(mediaTypeForFiles([of("mp3"), of("mp4")])).toBe("Video");
+		expect(mediaTypeForFiles([of("mp4"), of("mp3"), of("epub")])).toBe("Video");
 	});
 });
 
@@ -259,7 +293,8 @@ describe("Extension", () => {
 		const data = await extension!.getData();
 		expect(data.compatible).toBe(true);
 		expect(extension.enabled).toBe(true);
-		expect(data.media_type).toEqual(["Book"]);
+		// ExtensionData.media_type comes back in non-deterministic order.
+		expect([...data.media_type].sort()).toEqual(["Audio", "Book", "Video"]);
 		const provider = data.extension_type.find(
 			(variant) => variant.type === "EntryProvider",
 		);

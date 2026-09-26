@@ -2,12 +2,12 @@
 // built-in `filesystem` module: the directory walk takes a `readDir`
 // callback so the grouping logic can be unit-tested without the runtime.
 
-import type { Paragraph } from "@dion-js/runtime-types/runtime";
+import type { MediaType, Paragraph } from "@dion-js/runtime-types/runtime";
 
 /** Entries per browse/search page. */
 export const PAGE_SIZE = 30;
 
-export type FileKind = "epub" | "pdf" | "txt";
+export type FileKind = "epub" | "pdf" | "txt" | "mp3" | "mp4";
 
 /**
  * A supported file addressed relative to the library root with forward
@@ -43,7 +43,20 @@ export function kindForFilename(name: string): FileKind | null {
 	if (lower.endsWith(".epub")) return "epub";
 	if (lower.endsWith(".pdf")) return "pdf";
 	if (lower.endsWith(".txt")) return "txt";
+	if (lower.endsWith(".mp3")) return "mp3";
+	if (lower.endsWith(".mp4")) return "mp4";
 	return null;
+}
+
+/**
+ * The runtime MediaType a set of files presents as: any video file makes an
+ * entry video, otherwise any audio file makes it audio, otherwise it reads
+ * as a book.
+ */
+export function mediaTypeForFiles(files: ScannedFile[]): MediaType {
+	if (files.some((file) => file.kind === "mp4")) return "Video";
+	if (files.some((file) => file.kind === "mp3")) return "Audio";
+	return "Book";
 }
 
 /** The entry/episode name derived from a filename: extension stripped. */

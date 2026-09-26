@@ -1,7 +1,7 @@
 {
 	"name": "local-sources",
-	"version": "1.0.0",
-	"desc": "Read your own local library: pick a folder and its PDFs, EPUBs and text files show up as entries - one per loose file, one per folder with multiple episodes.",
+	"version": "1.1.0",
+	"desc": "Read and play your own local library: pick a folder and its PDFs, EPUBs, text files, MP3s and MP4s show up as entries - one per loose file, one per folder with multiple episodes.",
 	"icon": "https://placehold.co/256x256/EEE/31343C.png?text=Local",
 	"tags": [
 		"local",
@@ -9,7 +9,11 @@
 		"books",
 		"pdf",
 		"epub",
-		"text"
+		"text",
+		"audio",
+		"mp3",
+		"video",
+		"mp4"
 	],
 	"api_version": "*",
 	"lang": [],
@@ -22,7 +26,9 @@
 		}
 	],
 	"media_type": [
-		"Book"
+		"Book",
+		"Audio",
+		"Video"
 	],
 	"authors": [
 		"bldng1337"
