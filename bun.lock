@@ -301,7 +301,7 @@
     },
     "extensions/local-sources": {
       "name": "local-sources",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "dependencies": {
         "@dion-js/runtime-lib": "catalog:",
       },
@@ -624,22 +624,22 @@
   },
   "overrides": {
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.6.2",
+    "@dion-js/extension-scripts": "0.7.0",
     "@dion-js/extension-test-utils": "0.3.0",
-    "@dion-js/extension-types": "0.13.0",
-    "@dion-js/runtime": "1.13.1",
+    "@dion-js/extension-types": "0.14.0",
+    "@dion-js/runtime": "1.14.0",
     "@dion-js/runtime-lib": "0.12.0",
-    "@dion-js/runtime-types": "0.12.1",
+    "@dion-js/runtime-types": "0.13.0",
   },
   "catalog": {
     "@biomejs/biome": "2.5.11",
     "@dion-js/config": "0.1.0",
-    "@dion-js/extension-scripts": "0.6.2",
+    "@dion-js/extension-scripts": "0.7.0",
     "@dion-js/extension-test-utils": "0.3.0",
-    "@dion-js/extension-types": "0.13.0",
-    "@dion-js/runtime": "1.13.1",
+    "@dion-js/extension-types": "0.14.0",
+    "@dion-js/runtime": "1.14.0",
     "@dion-js/runtime-lib": "0.12.0",
-    "@dion-js/runtime-types": "0.12.1",
+    "@dion-js/runtime-types": "0.13.0",
     "@types/bun": "1.4.0",
     "typescript": "7.0.2",
     "valibot": "1.4.2",
@@ -667,17 +667,17 @@
 
     "@dion-js/config": ["@dion-js/config@0.1.0", "", {}, "sha512-2sZ7uT+ycxw0LpxBjN46HcOiNRWtxNaQ8gOApoE9BF9a6ONFmoF+7FDUhYbTsHpTezV6WGTiAtD3MejeAl/XMw=="],
 
-    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.6.2", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0", "handlebars": "4.7.8", "valibot": "1.2.0" }, "bin": { "dion-bundle": "bin/bundle.ts", "dion-create": "bin/create.ts", "dion-build-site": "bin/site.ts", "dion-build-index": "bin/index.ts" } }, "sha512-SjCmy5Ax8rcoDQWXGUA5FKzKT3YnpUFDqnhBNCFZ+CeOdjhpCEreJnFrbD9MARjduUNPyszeV2nouGNQEs0r5A=="],
+    "@dion-js/extension-scripts": ["@dion-js/extension-scripts@0.7.0", "", { "dependencies": { "@dion-js/runtime-types": "0.13.0", "handlebars": "4.7.8", "valibot": "1.2.0" }, "bin": { "dion-bundle": "bin/bundle.ts", "dion-create": "bin/create.ts", "dion-build-site": "bin/site.ts", "dion-build-index": "bin/index.ts" } }, "sha512-EwbV8ji2EC8kzCcptvKd6kLfSSbfJDtflRXUot4jIdMvjWGje860PNly/eMZLDBCiUzLb8jG9WqC+nk2jSFJbg=="],
 
     "@dion-js/extension-test-utils": ["@dion-js/extension-test-utils@0.3.0", "", { "dependencies": { "@dion-js/extension-types": "workspace:*", "@dion-js/runtime-types": "workspace:*", "image-url-validator": "^1.0.4", "m3u8-parser": "^7.2.0", "node-fetch": "^3.3.2" } }, "sha512-jomwzaSUylVVRb5pedEpstLSZSkbp8XjTG7/G4ZzPRpM8pFWGS7sKNabY+sUd3mqmTGX+32IQFXKnYOY8n0fxQ=="],
 
-    "@dion-js/extension-types": ["@dion-js/extension-types@0.13.0", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0", "valibot": "1.2.0" } }, "sha512-P76JS1CaRFLZS/m/Kw3LnvTEEArxbLR8IWQ2fmMDgroWsRmNq8zvCPcbiZHe/LbV4My7/8mrZV4CRMduftWldg=="],
+    "@dion-js/extension-types": ["@dion-js/extension-types@0.14.0", "", { "dependencies": { "@dion-js/runtime-types": "0.13.0", "valibot": "1.2.0" } }, "sha512-hNJIwSXv6Gd+ik2iBkIIAPxMZaIXf4gNKRy1+habUGKy1eF0FqK2lu+vX2XAnwTPAn7KzDQ+ui0DcsiESztG4w=="],
 
-    "@dion-js/runtime": ["@dion-js/runtime@1.13.1", "", { "dependencies": { "@dion-js/runtime-types": "0.12.0" } }, "sha512-8uxHk7dzEB7VG9WDZpqXxAbnnVrXiRMcDsv4A39G3pvzJfFAbkwKViA09H2J0HzkIXHEc2JcNF5cidtvAXyqDQ=="],
+    "@dion-js/runtime": ["@dion-js/runtime@1.14.0", "", { "dependencies": { "@dion-js/runtime-types": "0.13.0" } }, "sha512-PgJRxV+VNKZpT8vM/tgKNNAVajmrGr07rOK8W0NBOw5OgBVzK2gKrUMOq6rBQeFq7UyJGO4O3z9pRfO7JjJTUQ=="],
 
     "@dion-js/runtime-lib": ["@dion-js/runtime-lib@0.12.0", "", {}, "sha512-QAyB5/pNxrxwOqiNI3V337Two4CjtjhZBzdyUiTBsBoi/aaL47sFFbSBkovWwOTR237IjyG9fpJnb8dC/Xrm/A=="],
 
-    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.12.1", "", {}, "sha512-/mdf30YG6LEsr3AxqqqUrNhmkL/Smx84bMFxpS0/EaCmRx5lXBsvfnKa4dvDU8B+S4B6Lx5/e+Vkvlbe3xpiaQ=="],
+    "@dion-js/runtime-types": ["@dion-js/runtime-types@0.13.0", "", {}, "sha512-X6bmesdTk7rJF9ey3NdVhiOQbn8ju1ySw6/b4TB0wEt3XyqXKJFRhLERJ5oG2hAOpj2M4VA/ieFcfWxO2jNfxg=="],
 
     "@turbo/darwin-64": ["@turbo/darwin-64@2.10.12", "", { "os": "darwin", "cpu": "x64" }, "sha512-9nKgKoF6ZOUsM+or0OtNf+TTJSfGvDNP7ZFv/ZGWVwOSCkumyctQiTeHwB4UNljHTnC41AqylgbunLDHoccNrA=="],
 

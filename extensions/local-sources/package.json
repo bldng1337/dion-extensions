@@ -1,7 +1,7 @@
 {
 	"name": "local-sources",
-	"version": "1.1.0",
-	"desc": "Read and play your own local library: pick a folder and its PDFs, EPUBs, text files, MP3s and MP4s show up as entries - one per loose file, one per folder with multiple episodes.",
+	"version": "1.2.0",
+	"desc": "Read and play your own local library: pick a folder and its PDFs, EPUBs, text files, MP3s and MP4s show up as entries - one per loose file, one per folder with multiple episodes - titled and illustrated from the metadata stored inside them.",
 	"icon": "https://placehold.co/256x256/EEE/31343C.png?text=Local",
 	"tags": [
 		"local",
@@ -13,7 +13,8 @@
 		"audio",
 		"mp3",
 		"video",
-		"mp4"
+		"mp4",
+		"metadata"
 	],
 	"api_version": "*",
 	"lang": [],

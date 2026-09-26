@@ -49,6 +49,14 @@ export function kindForFilename(name: string): FileKind | null {
 }
 
 /**
+ * Whether a file is a container the host can read tags out of. A PDF or text
+ * file carries none, so there is nothing to gain by reading it whole.
+ */
+export function carriesMetadata(kind: FileKind): boolean {
+	return kind === "epub" || kind === "mp3" || kind === "mp4";
+}
+
+/**
  * The runtime MediaType a set of files presents as: any video file makes an
  * entry video, otherwise any audio file makes it audio, otherwise it reads
  * as a book.
@@ -122,6 +130,35 @@ export function naturalCompare(a: string, b: string): number {
 
 function byFileTitle(a: ScannedFile, b: ScannedFile): number {
 	return naturalCompare(a.title, b.title) || naturalCompare(a.rel, b.rel);
+}
+
+/** The disc/track a file's tags claim, when it claims one. */
+export type TrackTag = { disc?: number; track: number };
+
+/**
+ * Orders episodes by disc and track number, but only when *every* file carries
+ * one — a half-tagged folder would otherwise reorder itself by numbers the
+ * other half knows nothing about. Files without track numbers keep the natural
+ * filename order the scan produced.
+ */
+export function orderEpisodes(
+	files: ScannedFile[],
+	trackOf: (file: ScannedFile) => TrackTag | undefined,
+): ScannedFile[] {
+	const tagged: { file: ScannedFile; tag: TrackTag }[] = [];
+	for (const file of files) {
+		const tag = trackOf(file);
+		if (tag === undefined) return files;
+		tagged.push({ file, tag });
+	}
+	return tagged
+		.sort(
+			(a, b) =>
+				(a.tag.disc ?? 0) - (b.tag.disc ?? 0) ||
+				a.tag.track - b.tag.track ||
+				byFileTitle(a.file, b.file),
+		)
+		.map((entry) => entry.file);
 }
 
 // ---------------------------------------------------------------------------

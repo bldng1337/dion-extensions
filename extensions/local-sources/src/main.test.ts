@@ -8,12 +8,14 @@ import {
 import type { Extension } from "@dion-js/runtime";
 import { join } from "node:path";
 import {
+	carriesMetadata,
 	filterByTitle,
 	filesFromListing,
 	humanSize,
 	kindForFilename,
 	mediaTypeForFiles,
 	naturalCompare,
+	orderEpisodes,
 	paginate,
 	pathToFileUrl,
 	scanLibrary,
@@ -21,6 +23,7 @@ import {
 	titleFromFilename,
 	type Listing,
 	type ReadDirFn,
+	type TrackTag,
 } from "./library.ts";
 
 // ---------------------------------------------------------------------------
@@ -82,6 +85,15 @@ describe("naming helpers", () => {
 		expect(kindForFilename("cover.jpg")).toBeNull();
 		expect(kindForFilename("cover")).toBeNull();
 		expect(kindForFilename("archive.zip")).toBeNull();
+	});
+
+	it("should know which kinds can carry tags", () => {
+		expect(carriesMetadata("epub")).toBe(true);
+		expect(carriesMetadata("mp3")).toBe(true);
+		expect(carriesMetadata("mp4")).toBe(true);
+		// Nothing to read inside a PDF or a text file.
+		expect(carriesMetadata("pdf")).toBe(false);
+		expect(carriesMetadata("txt")).toBe(false);
 	});
 
 	it("should derive titles from filenames", () => {
@@ -202,6 +214,49 @@ describe("filesFromListing", () => {
 			"dir/a 10.epub",
 			"dir/b.txt",
 		]);
+	});
+});
+
+describe("orderEpisodes", () => {
+	const track = (rel: string) => ({ rel, title: rel, kind: "mp3" }) as const;
+	const files = [track("a.mp3"), track("b.mp3"), track("c.mp3")];
+
+	it("should order by disc then track when every file is tagged", () => {
+		const tagged: Record<string, TrackTag> = {
+			"a.mp3": { disc: 2, track: 1 },
+			"b.mp3": { disc: 1, track: 2 },
+			"c.mp3": { disc: 1, track: 1 },
+		};
+		expect(
+			orderEpisodes([...files], (file) => tagged[file.rel]).map((f) => f.rel),
+		).toEqual(["c.mp3", "b.mp3", "a.mp3"]);
+	});
+
+	it("should break track ties by name, so the order is stable", () => {
+		const same: Record<string, TrackTag> = {
+			"a.mp3": { track: 1 },
+			"b.mp3": { track: 1 },
+			"c.mp3": { track: 1 },
+		};
+		expect(
+			orderEpisodes([...files], (file) => same[file.rel]).map((f) => f.rel),
+		).toEqual(["a.mp3", "b.mp3", "c.mp3"]);
+	});
+
+	it("should keep the scan's order when a file has no track number", () => {
+		const partial: Record<string, TrackTag> = {
+			"a.mp3": { track: 2 },
+			"c.mp3": { track: 1 },
+		};
+		const ordered = orderEpisodes(files, (file) => partial[file.rel]);
+		expect(ordered.map((f) => f.rel)).toEqual(["a.mp3", "b.mp3", "c.mp3"]);
+		// Nothing was reordered, so the scan's own array is handed back.
+		expect(ordered).toBe(files);
+	});
+
+	it("should leave an untagged library alone", () => {
+		expect(orderEpisodes([...files], () => undefined)).toEqual(files);
+		expect(orderEpisodes([], () => undefined)).toEqual([]);
 	});
 });
 
