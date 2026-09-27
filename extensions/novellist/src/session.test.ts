@@ -147,8 +147,36 @@ describe("prettyReadingStatus", () => {
 });
 
 // Optional live-API checks: populate .env via `bun run sync-cookies` first.
+// An expired access token counts as "no auth": the API would just answer 401,
+// so the whole block skips until the token is refreshed.
 const token = process.env.NOVELLIST_ACCESS_TOKEN;
-describe.skipIf(!token)("Novellist live API", () => {
+
+/** Unix seconds when a Supabase JWT stops being valid; 0 when unreadable. */
+function jwtExpiry(jwt: string): number {
+	const payload = jwt.split(".")[1];
+	if (payload === undefined) {
+		return 0;
+	}
+	try {
+		const parsed = JSON.parse(
+			Buffer.from(payload, "base64url").toString("utf8"),
+		) as { exp?: unknown };
+		return typeof parsed.exp === "number" ? parsed.exp : 0;
+	} catch {
+		return 0;
+	}
+}
+
+const tokenUsable =
+	token !== undefined &&
+	token.length > 0 &&
+	jwtExpiry(token) > Date.now() / 1000;
+if (token !== undefined && !tokenUsable) {
+	console.warn(
+		"[novellist] NOVELLIST_ACCESS_TOKEN is missing or expired — skipping the live API tests. Run `bun run sync-cookies` to refresh it.",
+	);
+}
+describe.skipIf(!tokenUsable)("Novellist live API", () => {
 	const headers = { Authorization: `Bearer ${token}` };
 	const api = "https://novellist-be-960019704910.asia-east1.run.app/api";
 

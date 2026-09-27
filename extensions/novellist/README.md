@@ -23,8 +23,13 @@ same way the anilist extension tracks anime/manga.
 ```sh
 bun install
 bun run build
-bun test            # unit tests + live-API checks when .env exists
+bun test            # unit tests + live-API checks when .env has a usable token
 ```
+
+The live-API checks skip themselves (instead of failing) when `.env` is
+missing or its `NOVELLIST_ACCESS_TOKEN` has expired — refresh via
+`bun run sync-cookies` and run the tests again. See `.env.example` for what
+goes into `.env`.
 
 ### Cookies → .env
 
