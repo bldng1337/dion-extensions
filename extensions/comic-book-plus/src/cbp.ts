@@ -28,9 +28,10 @@ import type {
 export const SITE_URL = "https://comicbookplus.com/";
 export const PAGE_SIZE = 50;
 
-/** The site rejects empty User-Agents; identify ourselves instead. */
+/** The site rejects empty and bot-style User-Agents (403); a plain browser
+ * UA is the least-detectable option for a read-only client. */
 export const USER_AGENT =
-	"Mozilla/5.0 (compatible; Dion comic-book-plus extension)";
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 
 /** Hotlink protection: page images must come with a same-site Referer. */
 export function refererFor(url: string): { [key: string]: string } {
