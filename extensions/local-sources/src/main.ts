@@ -17,6 +17,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -433,14 +434,22 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
-		return this.#browseList(page, null);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		return { entries: await this.#browseList(page, null), settings };
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
-		if (query.length === 0) return { content: [], hasnext: false };
-		return this.#browseList(page, query);
+		if (query.length === 0)
+			return { entries: { content: [], hasnext: false }, settings };
+		return { entries: await this.#browseList(page, query), settings };
 	}
 
 	async detail(
@@ -554,6 +563,7 @@ export default class extends DionExtension implements SourceProvider {
 					source: {
 						type: "Paragraphlist",
 						paragraphs: textToParagraphs(await readTextFile(fileAbs)),
+						audio: null,
 					},
 					settings: { ...settings },
 				};

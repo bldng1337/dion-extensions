@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -146,25 +146,38 @@ export default class PerseusExtension
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const start = Math.max(0, page) * PAGE_SIZE;
 		const slice = WORKS.slice(start, start + PAGE_SIZE);
 		return {
-			content: slice.map((work) => this.workToEntry(work)),
-			hasnext: WORKS.length > start + PAGE_SIZE,
-			length: slice.length,
+			entries: {
+				content: slice.map((work) => this.workToEntry(work)),
+				hasnext: WORKS.length > start + PAGE_SIZE,
+				length: slice.length,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = filter.trim().toLowerCase();
 		if (term.length === 0 || page > 0) {
-			return { content: [], hasnext: false, length: 0 };
+			return { entries: { content: [], hasnext: false, length: 0 }, settings };
 		}
 		const content = WORKS.filter((work) =>
 			`${work.title} ${work.author} ${work.lang}`.toLowerCase().includes(term),
 		).map((work) => this.workToEntry(work));
-		return { content, hasnext: false, length: content.length };
+		return {
+			entries: { content, hasnext: false, length: content.length },
+			settings,
+		};
 	}
 
 	async detail(
@@ -227,7 +240,7 @@ export default class PerseusExtension
 			style: { italic: true },
 		});
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

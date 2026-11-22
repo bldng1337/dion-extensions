@@ -294,7 +294,7 @@ describe("Extension", () => {
 
 	it("should browse the free library", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -311,7 +311,7 @@ describe("Extension", () => {
 
 	it("should paginate browse results", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids0 = browseResult.map((e) => e.id.uid);
 		const ids1 = page1.content.map((e) => e.id.uid);
@@ -323,7 +323,7 @@ describe("Extension", () => {
 
 	it("should search by title", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "basilisk");
+		const result = (await extension!.search(0, "basilisk", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(
 			result.content.some((e) => e.title.includes("On Basilisk Station")),
@@ -332,7 +332,7 @@ describe("Extension", () => {
 	}, 120_000);
 
 	it("should return no results for an empty search", async () => {
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	});
@@ -394,7 +394,7 @@ describe("Extension", () => {
 
 	it("should search by author once a book was opened", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "eric flint");
+		const result = (await extension!.search(0, "eric flint", {})).entries;
 		expect(result.content.some((e) => e.id.uid === "0671578499")).toBe(true);
 	}, 120_000);
 });

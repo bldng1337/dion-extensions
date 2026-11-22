@@ -1,8 +1,8 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import {
 	Dropdown,
-	ExtensionSetting,
 	SettingStore,
+	defineStoreSetting,
 } from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import { SourceProvider } from "@dion-js/runtime-types/extension";
@@ -13,6 +13,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -197,24 +198,23 @@ function iaDocToEntry(doc: IaSearchDoc): Entry {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		collection: new ExtensionSetting<string>(
-			COLLECTION_SETTING_ID,
-			"all",
-			"Search",
-		)
-			.setLabel("Collection")
-			.setUI(new Dropdown(COLLECTIONS)),
-		language: new ExtensionSetting<string>(LANGUAGE_SETTING_ID, "all", "Search")
-			.setLabel("Language")
-			.setUI(new Dropdown(LANGUAGES)),
-		sort: new ExtensionSetting<string>(
-			SORT_SETTING_ID,
-			"downloads desc",
-			"Search",
-		)
-			.setLabel("Sort by")
-			.setUI(new Dropdown(SORTS)),
+	settings = {};
+	searchSettings = {
+		collection: defineStoreSetting<string>(COLLECTION_SETTING_ID, {
+			default: "all",
+			label: "Collection",
+			ui: new Dropdown(COLLECTIONS),
+		}),
+		language: defineStoreSetting<string>(LANGUAGE_SETTING_ID, {
+			default: "all",
+			label: "Language",
+			ui: new Dropdown(LANGUAGES),
+		}),
+		sort: defineStoreSetting<string>(SORT_SETTING_ID, {
+			default: "downloads desc",
+			label: "Sort by",
+			ui: new Dropdown(SORTS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -225,12 +225,16 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	private async list(page: number, term?: string): Promise<EntryList> {
-		const [collection, language, sort] = await Promise.all([
-			this.settings.collection.get(),
-			this.settings.language.get(),
-			this.settings.sort.get(),
-		]);
+	private async list(
+		page: number,
+		term: string | undefined,
+		store: SettingStore,
+	): Promise<EntryList> {
+		const [collection, language, sort] = [
+			this.searchSettings.collection.get(store),
+			this.searchSettings.language.get(store),
+			this.searchSettings.sort.get(store),
+		];
 		// Text searches keep the popularity sort so exact matches rank first;
 		// the user's sort applies while browsing.
 		const { docs, hasMore } = await searchArchive(
@@ -244,15 +248,35 @@ export default class extends DionExtension implements SourceProvider {
 		};
 	}
 
-	async browse(page: number): Promise<EntryList> {
-		return this.list(page);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		return {
+			entries: await this.list(page, undefined, store),
+			settings: store.toMap(),
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		if (filter.trim().length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
-		return this.list(page, filter);
+		return {
+			entries: await this.list(page, filter, store),
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(

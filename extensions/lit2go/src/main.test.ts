@@ -44,7 +44,7 @@ let siteUp = true;
 	extension = ext;
 	const probe = (async () => {
 		await ext.setEnabled(true);
-		await ext.browse(0);
+		(await ext.browse(0, {})).entries;
 	})();
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	try {
@@ -162,7 +162,7 @@ describe("Extension", () => {
 		"should be able to browse",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const result = await extension!.browse(0);
+			const result = (await extension!.browse(0, {})).entries;
 			expect(result).toBeDefined();
 			expect(result.content.length).toBeGreaterThan(0);
 			expect(result.hasnext).toBe(true);
@@ -180,7 +180,7 @@ describe("Extension", () => {
 		"should paginate browse pages",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const second = await extension!.browse(1);
+			const second = (await extension!.browse(1, {})).entries;
 			await assertValidEntries(second.content);
 			expect(second.content.length).toBeGreaterThan(0);
 			expect(second.content[0]!.id.uid).not.toBe(browseResult[0]!.id.uid);
@@ -191,7 +191,7 @@ describe("Extension", () => {
 		"should be able to search",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const result = await extension!.search(0, "alice");
+			const result = (await extension!.search(0, "alice", {})).entries;
 			expect(result.content.length).toBeGreaterThan(0);
 			await assertValidEntries(result.content);
 			expect(
@@ -205,7 +205,7 @@ describe("Extension", () => {
 	);
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 30_000);

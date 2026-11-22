@@ -388,7 +388,7 @@ describe("Extension", () => {
 
 	it("should browse the catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
 		expect(result.content[0]!.media_type).toBe("Book");
@@ -399,7 +399,7 @@ describe("Extension", () => {
 
 	it("should paginate the catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids0 = browseResult.map((e) => e.id.uid);
 		const ids1 = page1.content.map((e) => e.id.uid);
@@ -411,7 +411,7 @@ describe("Extension", () => {
 
 	it("should search the catalog for the Iliad", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "iliad");
+		const result = (await extension!.search(0, "iliad", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(false);
 		expect(result.content.map((e) => e.id.uid)).toContain("Homer/iliad");
@@ -423,7 +423,7 @@ describe("Extension", () => {
 
 	it("should also match searches against the author name", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "samuel butler");
+		const result = (await extension!.search(0, "samuel butler", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(
 			result.content.every((e) => e.author?.includes("Homer") ?? false),
@@ -432,11 +432,12 @@ describe("Extension", () => {
 
 	it("should return nothing for empty searches or past-the-end pages", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content.length).toBe(0);
-		const page1 = await extension!.search(1, "iliad");
+		const page1 = (await extension!.search(1, "iliad", {})).entries;
 		expect(page1.content.length).toBe(0);
-		const nohit = await extension!.search(0, "no such classics text xyz");
+		const nohit = (await extension!.search(0, "no such classics text xyz", {}))
+			.entries;
 		expect(nohit.content.length).toBe(0);
 		expect(nohit.hasnext).toBe(false);
 	});

@@ -89,10 +89,12 @@ describe("naming helpers", () => {
 
 	it("should know which kinds can carry tags", () => {
 		expect(carriesMetadata("epub")).toBe(true);
+		// The runtime reads PDF info dictionaries since the metadata module
+		// learned to inspect them.
+		expect(carriesMetadata("pdf")).toBe(true);
 		expect(carriesMetadata("mp3")).toBe(true);
 		expect(carriesMetadata("mp4")).toBe(true);
-		// Nothing to read inside a PDF or a text file.
-		expect(carriesMetadata("pdf")).toBe(false);
+		// Nothing to read inside a plain text file.
 		expect(carriesMetadata("txt")).toBe(false);
 	});
 
@@ -362,14 +364,16 @@ describe("Extension", () => {
 	});
 
 	it("should browse to an empty list while no folder is configured", async () => {
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content).toEqual([]);
 		expect(result.hasnext).toBe(false);
 	});
 
 	it("should search to an empty list while no folder is configured", async () => {
-		expect((await extension!.search(0, "anything")).content).toEqual([]);
-		expect((await extension!.search(0, "   ")).content).toEqual([]);
+		expect(
+			(await extension!.search(0, "anything", {})).entries.content,
+		).toEqual([]);
+		expect((await extension!.search(0, "   ", {})).entries.content).toEqual([]);
 	});
 
 	it("should reject detail while no folder is configured", async () => {

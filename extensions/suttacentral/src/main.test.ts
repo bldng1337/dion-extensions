@@ -199,7 +199,7 @@ describe("Extension", () => {
 
 	it("should browse curated collections", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
 		expect(result.content[0]!.id.uid).toBe("dhp");
@@ -210,7 +210,7 @@ describe("Extension", () => {
 
 	it("should paginate browse results", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids1 = page1.content.map((e) => e.id.uid);
 		expect(ids1).not.toContain("dhp");
@@ -220,7 +220,7 @@ describe("Extension", () => {
 
 	it("should full-text search suttas", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "suffering");
+		const result = (await extension!.search(0, "suffering", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(false);
 		await assertValidEntries(result.content);
@@ -229,7 +229,7 @@ describe("Extension", () => {
 
 	it("should return no results for an empty search", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content).toHaveLength(0);
 	}, 120_000);
 

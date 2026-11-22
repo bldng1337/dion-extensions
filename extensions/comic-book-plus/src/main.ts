@@ -1,5 +1,9 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import {
+	Dropdown,
+	SettingStore,
+	defineStoreSetting,
+} from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -7,7 +11,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -135,14 +139,13 @@ function paginate<T>(
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		category: new ExtensionSetting<string>(
-			"category",
-			DEFAULT_CATEGORY,
-			"Search",
-		)
-			.setLabel("Category")
-			.setUI(new Dropdown(CATEGORIES.map((c) => ({ ...c })))),
+	settings = {};
+	searchSettings = {
+		category: defineStoreSetting<string>("category", {
+			default: DEFAULT_CATEGORY,
+			label: "Category",
+			ui: new Dropdown(CATEGORIES.map((c) => ({ ...c }))),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -154,12 +157,20 @@ export default class extends DionExtension implements SourceProvider {
 	// -- SourceProvider ------------------------------------------------------
 
 	/** Paged book listing of the selected category. */
-	async browse(page: number): Promise<EntryList> {
-		const category = await this.currentCategory();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const category = this.currentCategory(store);
 		const listing = await fetchListing(category, page);
 		return {
-			content: listing.items.map(itemToEntry),
-			hasnext: listing.hasNext && listing.items.length > 0,
+			entries: {
+				content: listing.items.map(itemToEntry),
+				hasnext: listing.hasNext && listing.items.length > 0,
+			},
+			settings: store.toMap(),
 		};
 	}
 
@@ -168,12 +179,21 @@ export default class extends DionExtension implements SourceProvider {
 	 * scans the category listings (newest first, cached) client-side and
 	 * matches the filter against book and series titles.
 	 */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
-		const category = await this.currentCategory();
+		const category = this.currentCategory(store);
 		const scanned: ListingItem[] = [];
 		for (let p = 0; p < SEARCH_SCAN_PAGES; p++) {
 			const listing = await fetchListing(category, p);
@@ -185,8 +205,11 @@ export default class extends DionExtension implements SourceProvider {
 		const hits = scanned.filter((item) => matchesItem(item, query));
 		const result = paginate(hits, page, 50);
 		return {
-			content: result.content.map(itemToEntry),
-			hasnext: result.hasnext,
+			entries: {
+				content: result.content.map(itemToEntry),
+				hasnext: result.hasnext,
+			},
+			settings: store.toMap(),
 		};
 	}
 
@@ -235,8 +258,8 @@ export default class extends DionExtension implements SourceProvider {
 		};
 	}
 
-	private async currentCategory(): Promise<string> {
-		const value = await this.settings.category.get();
+	private currentCategory(store: SettingStore): string {
+		const value = this.searchSettings.category.get(store);
 		return typeof value === "string" && value.length > 0
 			? value
 			: DEFAULT_CATEGORY;

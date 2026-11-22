@@ -1,8 +1,8 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import {
 	Dropdown,
-	ExtensionSetting,
 	SettingStore,
+	defineStoreSetting,
 } from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
@@ -11,7 +11,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -119,14 +119,13 @@ async function authorBooks(href: string): Promise<BookCard[]> {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		category: new ExtensionSetting<string>(
-			CATEGORY_SETTING_ID,
-			"fiction-general",
-			"Search",
-		)
-			.setLabel("Browse category")
-			.setUI(new Dropdown(CATEGORIES)),
+	settings = {};
+	searchSettings = {
+		category: defineStoreSetting<string>(CATEGORY_SETTING_ID, {
+			default: "fiction-general",
+			label: "Browse category",
+			ui: new Dropdown(CATEGORIES),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -137,26 +136,40 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
-		const category = await this.settings.category.get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const category = this.searchSettings.category.get(store);
 		if (category === RECENT_VALUE) {
 			if (page > 0) {
-				return { content: [], hasnext: false };
+				return {
+					entries: { content: [], hasnext: false },
+					settings: store.toMap(),
+				};
 			}
 			const body = await fetchPage(`${BASE}/recently-added.html`);
 			const content = (body ? parseBookCards(body) : []).map(cardToEntry);
-			return { content, hasnext: false };
+			return { entries: { content, hasnext: false }, settings: store.toMap() };
 		}
 		// Dion pages are 0-based, the site's category pages are 1-based.
 		const url = `${BASE}/category/ebooks/${category}-page-${Math.max(0, page) + 1}.html`;
 		const body = await fetchPage(url);
 		if (body === null) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const content = parseBookCards(body).map(cardToEntry);
 		return {
-			content,
-			hasnext: content.length > 0 && body.includes(`-page-${page + 2}.html`),
+			entries: {
+				content,
+				hasnext: content.length > 0 && body.includes(`-page-${page + 2}.html`),
+			},
+			settings: store.toMap(),
 		};
 	}
 
@@ -164,10 +177,19 @@ export default class extends DionExtension implements SourceProvider {
 	 * filters client-side over a session-cached catalog: the sitemap (titles)
 	 * plus the authors index, expanding matching author pages into their
 	 * books so author queries like "grimm" work. */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const tokens = tokenizeQuery(query);
 
@@ -217,9 +239,12 @@ export default class extends DionExtension implements SourceProvider {
 
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: entries.slice(start, start + PAGE_SIZE),
-			hasnext: start + PAGE_SIZE < entries.length,
-			length: entries.length,
+			entries: {
+				content: entries.slice(start, start + PAGE_SIZE),
+				hasnext: start + PAGE_SIZE < entries.length,
+				length: entries.length,
+			},
+			settings: store.toMap(),
 		};
 	}
 

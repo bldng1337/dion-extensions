@@ -9,6 +9,7 @@ import type {
 	AudioMetadata,
 	EpubMetadata,
 	Mp4Metadata,
+	PdfMetadata,
 } from "metadata";
 
 /** Everything `metadata.inspect` can hand back. */
@@ -16,9 +17,10 @@ export type InspectedMetadata =
 	| EpubMetadata
 	| ArchiveMetadata
 	| Mp4Metadata
+	| PdfMetadata
 	| AudioMetadata;
 
-export type ContainerKind = "epub" | "mp4" | "audio";
+export type ContainerKind = "epub" | "pdf" | "mp4" | "audio";
 
 /** A playback chapter, still in milliseconds. */
 export type MetaChapter = {
@@ -134,6 +136,20 @@ function fromMp4(raw: Mp4Metadata): FileMeta {
 	};
 }
 
+function fromPdf(raw: PdfMetadata): FileMeta {
+	return {
+		kind: "pdf",
+		title: text(raw.title),
+		authors: texts([raw.author]),
+		description: text(raw.subject),
+		genres: texts(raw.keywords),
+		year: year(raw.creationDate),
+		hasCover: false,
+		contentsCount: 0,
+		chapters: [],
+	};
+}
+
 function fromAudio(raw: AudioMetadata): FileMeta {
 	return {
 		kind: "audio",
@@ -158,6 +174,8 @@ export function normalizeMetadata(raw: InspectedMetadata): FileMeta | null {
 	switch (raw.type) {
 		case "epub":
 			return fromEpub(raw);
+		case "pdf":
+			return fromPdf(raw);
 		case "mp4":
 			return fromMp4(raw);
 		case "audio":

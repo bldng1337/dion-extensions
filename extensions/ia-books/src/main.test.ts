@@ -198,7 +198,7 @@ describe("Extension", () => {
 
 	it("should be able to browse", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -212,7 +212,7 @@ describe("Extension", () => {
 
 	it("should be able to search by title and author", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "sherlock holmes");
+		const result = (await extension!.search(0, "sherlock holmes", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
 			expect(entry.media_type).toBe("Book");
@@ -226,7 +226,7 @@ describe("Extension", () => {
 
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 30_000);

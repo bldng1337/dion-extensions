@@ -1,8 +1,8 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import {
 	Dropdown,
-	ExtensionSetting,
 	SettingStore,
+	defineStoreSetting,
 } from "@dion-js/runtime-lib/settings.js";
 import { Column, Image, Link } from "@dion-js/runtime-lib/ui.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
@@ -11,7 +11,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	Link as DionLink,
@@ -368,17 +368,18 @@ function htmlToParagraphTexts(html: string): string[] {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		contentType: new ExtensionSetting<string>("content_type", "all", "Search")
-			.setLabel("Content type")
-			.setUI(
-				new Dropdown([
-					{ value: "all", label: "Everything" },
-					{ value: "story", label: "Stories" },
-					{ value: "comic", label: "Comics" },
-					{ value: "video", label: "Videos" },
-				]),
-			),
+	settings = {};
+	searchSettings = {
+		contentType: defineStoreSetting<string>("content_type", {
+			default: "all",
+			label: "Content type",
+			ui: new Dropdown([
+				{ value: "all", label: "Everything" },
+				{ value: "story", label: "Stories" },
+				{ value: "comic", label: "Comics" },
+				{ value: "video", label: "Videos" },
+			]),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -387,8 +388,8 @@ export default class extends DionExtension implements SourceProvider {
 		return undefined;
 	}
 
-	private async filteredItems(): Promise<IndexedItem[]> {
-		const kind = await this.settings.contentType.get();
+	private async filteredItems(store: SettingStore): Promise<IndexedItem[]> {
+		const kind = this.searchSettings.contentType.get(store);
 		const items = await getIndex();
 		if (!kind || kind === "all") {
 			return items;
@@ -396,20 +397,40 @@ export default class extends DionExtension implements SourceProvider {
 		return items.filter((item) => item.kind === kind);
 	}
 
-	async browse(page: number): Promise<EntryList> {
-		const items = await this.filteredItems();
-		return paginate(items.map(toItemEntry), page);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const items = await this.filteredItems(store);
+		return {
+			entries: paginate(items.map(toItemEntry), page),
+			settings: store.toMap(),
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim().toLowerCase();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
-		const items = (await this.filteredItems()).filter((item) =>
+		const items = (await this.filteredItems(store)).filter((item) =>
 			matchesQuery(item, query),
 		);
-		return paginate(items.map(toItemEntry), page);
+		return {
+			entries: paginate(items.map(toItemEntry), page),
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(
@@ -537,7 +558,7 @@ export default class extends DionExtension implements SourceProvider {
 			throw new Error(`League Universe: story ${slug} has no readable content`);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -427,7 +427,10 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const lang = await this.settings.language.get();
 		const category = FEATURED_CATEGORIES[lang];
 		if (category) {
@@ -437,18 +440,24 @@ export default class extends DionExtension implements SourceProvider {
 			const slice = members.slice(start, start + PAGE_SIZE);
 			if (slice.length > 0 || (page === 0 && members.length === 0)) {
 				return {
-					content: slice.map((title) => this.workToEntry(lang, title)),
-					hasnext: members.length > start + PAGE_SIZE,
+					entries: {
+						content: slice.map((title) => this.workToEntry(lang, title)),
+						hasnext: members.length > start + PAGE_SIZE,
+					},
+					settings,
 				};
 			}
 			if (slice.length === 0) {
-				return { content: [], hasnext: false };
+				return { entries: { content: [], hasnext: false }, settings };
 			}
 		}
 		const works = await this.fetchWorks(lang, page);
 		return {
-			content: works.titles.map((title) => this.workToEntry(lang, title)),
-			hasnext: works.hasnext,
+			entries: {
+				content: works.titles.map((title) => this.workToEntry(lang, title)),
+				hasnext: works.hasnext,
+			},
+			settings,
 		};
 	}
 
@@ -464,10 +473,14 @@ export default class extends DionExtension implements SourceProvider {
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = filter.trim();
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const lang = await this.settings.language.get();
 		const offset = Math.max(0, page) * PAGE_SIZE;
@@ -503,8 +516,11 @@ export default class extends DionExtension implements SourceProvider {
 			});
 		}
 		return {
-			content,
-			hasnext: data["continue"]?.sroffset !== undefined,
+			entries: {
+				content,
+				hasnext: data["continue"]?.sroffset !== undefined,
+			},
+			settings,
 		};
 	}
 
@@ -608,7 +624,7 @@ export default class extends DionExtension implements SourceProvider {
 			throw new Error(`Wikisource: no readable text found for "${data.title}"`);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -318,16 +318,22 @@ export default class extends DionExtension implements SourceProvider {
 	 * whatever the /en/xhtml/ tree currently lists), built from the site's
 	 * directory indexes plus one title page per book and cached per session.
 	 */
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const p = Math.max(0, page);
 		await feed.ensure((p + 1) * PAGE_SIZE);
 		const content = feed.loaded
 			.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE)
 			.map((book) => this.toEntry(book));
 		return {
-			content,
-			hasnext: feed.hasMoreAfter((p + 1) * PAGE_SIZE),
-			length: content.length,
+			entries: {
+				content,
+				hasnext: feed.hasMoreAfter((p + 1) * PAGE_SIZE),
+				length: content.length,
+			},
+			settings,
 		};
 	}
 
@@ -335,16 +341,23 @@ export default class extends DionExtension implements SourceProvider {
 	 * The site has no addressable search, so search runs client-side over
 	 * the cached catalog (title, series and author substring match).
 	 */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim().toLowerCase();
 		if (query.length === 0 || Math.max(0, page) > 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		await feed.ensure(Number.MAX_SAFE_INTEGER);
 		const content = feed.loaded
 			.filter((book) => searchHaystack(book).includes(query))
 			.map((book) => this.toEntry(book));
-		return { content, hasnext: false, length: content.length };
+		return {
+			entries: { content, hasnext: false, length: content.length },
+			settings,
+		};
 	}
 
 	async detail(
@@ -454,7 +467,7 @@ export default class extends DionExtension implements SourceProvider {
 
 		const paragraphs = await episodeParagraphs(bookUid, file, url, name);
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

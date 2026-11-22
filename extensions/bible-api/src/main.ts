@@ -12,7 +12,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -186,22 +186,35 @@ export default class extends DionExtension implements SourceProvider {
 		);
 	}
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: BOOKS.slice(start, start + PAGE_SIZE).map(bookToEntry),
-			hasnext: start + PAGE_SIZE < BOOKS.length,
-			length: BOOKS.length,
+			entries: {
+				content: BOOKS.slice(start, start + PAGE_SIZE).map(bookToEntry),
+				hasnext: start + PAGE_SIZE < BOOKS.length,
+				length: BOOKS.length,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const results = searchBooks(filter);
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: results.slice(start, start + PAGE_SIZE).map(bookToEntry),
-			hasnext: start + PAGE_SIZE < results.length,
-			length: results.length,
+			entries: {
+				content: results.slice(start, start + PAGE_SIZE).map(bookToEntry),
+				hasnext: start + PAGE_SIZE < results.length,
+				length: results.length,
+			},
+			settings,
 		};
 	}
 
@@ -288,7 +301,7 @@ export default class extends DionExtension implements SourceProvider {
 		}
 
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

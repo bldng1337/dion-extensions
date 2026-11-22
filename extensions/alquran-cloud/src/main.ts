@@ -12,7 +12,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -199,24 +199,37 @@ export default class extends DionExtension implements SourceProvider {
 		);
 	}
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const surahs = await surahList();
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: surahs.slice(start, start + PAGE_SIZE).map(surahToEntry),
-			hasnext: start + PAGE_SIZE < surahs.length,
-			length: surahs.length,
+			entries: {
+				content: surahs.slice(start, start + PAGE_SIZE).map(surahToEntry),
+				hasnext: start + PAGE_SIZE < surahs.length,
+				length: surahs.length,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const surahs = await surahList();
 		const results = searchSurahs(surahs, filter);
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: results.slice(start, start + PAGE_SIZE).map(surahToEntry),
-			hasnext: start + PAGE_SIZE < results.length,
-			length: results.length,
+			entries: {
+				content: results.slice(start, start + PAGE_SIZE).map(surahToEntry),
+				hasnext: start + PAGE_SIZE < results.length,
+				length: results.length,
+			},
+			settings,
 		};
 	}
 
@@ -312,6 +325,7 @@ export default class extends DionExtension implements SourceProvider {
 						arabic as ApiSurah,
 						translated as ApiSurah,
 					),
+					audio: null,
 				},
 				settings: { ...settings },
 			};

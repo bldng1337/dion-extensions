@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -152,20 +152,30 @@ export default class SuttaCentralExtension
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const start = Math.max(0, page) * PAGE_SIZE;
 		const slice = VOLUMES.slice(start, start + PAGE_SIZE);
 		return {
-			content: slice.map((seed) => this.volumeToEntry(seed)),
-			hasnext: VOLUMES.length > start + PAGE_SIZE,
-			length: slice.length,
+			entries: {
+				content: slice.map((seed) => this.volumeToEntry(seed)),
+				hasnext: VOLUMES.length > start + PAGE_SIZE,
+				length: slice.length,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = filter.trim();
 		if (term.length === 0 || page > 0) {
-			return { content: [], hasnext: false, length: 0 };
+			return { entries: { content: [], hasnext: false, length: 0 }, settings };
 		}
 		// The full-text endpoint has no pagination (max 15 hits) and covers
 		// root + translated segments; keep translation hits, dedupe by uid.
@@ -189,7 +199,10 @@ export default class SuttaCentralExtension
 				author: hit.author ? [hit.author] : [ATTRIBUTION],
 			});
 		}
-		return { content, hasnext: false, length: content.length };
+		return {
+			entries: { content, hasnext: false, length: content.length },
+			settings,
+		};
 	}
 
 	async detail(
@@ -296,7 +309,7 @@ export default class SuttaCentralExtension
 		});
 
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

@@ -8,6 +8,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -190,16 +191,23 @@ export default class extends DionExtension implements SourceProvider {
 	}
 
 	/** Paged listing of the open Digital Comic Museum mirrors, most downloaded first. */
-	async browse(page: number): Promise<EntryList> {
-		return this.list(page);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		return { entries: await this.list(page), settings };
 	}
 
 	/** Server-side title search inside the mirror set (IA relevance order). */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		if (filter.trim().length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
-		return this.list(page, filter);
+		return { entries: await this.list(page, filter), settings };
 	}
 
 	async detail(

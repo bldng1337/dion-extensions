@@ -315,7 +315,7 @@ describe("Extension", () => {
 
 	it("should browse the series listings", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content).toHaveLength(24);
 		expect(result.hasnext).toBe(true);
 		expect(result.content[0]!.id.uid).toBe("scp-001");
@@ -327,7 +327,7 @@ describe("Extension", () => {
 
 	it("should paginate browse without duplicates", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content).toHaveLength(24);
 		const ids0 = browseResult.map((entry) => entry.id.uid);
 		const ids1 = page1.content.map((entry) => entry.id.uid);
@@ -338,7 +338,7 @@ describe("Extension", () => {
 
 	it("should find SCP-173 by its listing title", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "sculpture");
+		const result = (await extension!.search(0, "sculpture", {})).entries;
 		expect(result.hasnext).toBe(false);
 		const entry = result.content.find((item) => item.id.uid === "scp-173");
 		expect(entry).toBeDefined();
@@ -348,15 +348,17 @@ describe("Extension", () => {
 
 	it("should also match searches against the article number", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "scp-173");
+		const result = (await extension!.search(0, "scp-173", {})).entries;
 		expect(result.content.map((entry) => entry.id.uid)).toContain("scp-173");
 	}, 120_000);
 
 	it("should return nothing for empty or unmatched searches", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content).toHaveLength(0);
-		const nohit = await extension!.search(0, "no such containment file xyz");
+		const nohit = (
+			await extension!.search(0, "no such containment file xyz", {})
+		).entries;
 		expect(nohit.content).toHaveLength(0);
 		expect(nohit.hasnext).toBe(false);
 	});

@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -242,16 +242,22 @@ export default class extends DionExtension implements SourceProvider {
 	 * per session). Author pages whose texts are only hosted at the Perseus
 	 * Project are skipped.
 	 */
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const p = Math.max(0, page);
 		await feed.ensure((p + 1) * PAGE_SIZE);
 		const content = feed.loaded
 			.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE)
 			.map((work) => this.toEntry(work));
 		return {
-			content,
-			hasnext: feed.hasMoreAfter((p + 1) * PAGE_SIZE),
-			length: content.length,
+			entries: {
+				content,
+				hasnext: feed.hasMoreAfter((p + 1) * PAGE_SIZE),
+				length: content.length,
+			},
+			settings,
 		};
 	}
 
@@ -259,10 +265,14 @@ export default class extends DionExtension implements SourceProvider {
 	 * The site's own search is a Google Custom Search form, so search runs
 	 * client-side over the cached catalog (title and author substring match).
 	 */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim().toLowerCase();
 		if (query.length === 0 || Math.max(0, page) > 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		await feed.ensure(Number.MAX_SAFE_INTEGER);
 		const content = feed.loaded
@@ -273,7 +283,10 @@ export default class extends DionExtension implements SourceProvider {
 					(work.translator?.toLowerCase().includes(query) ?? false),
 			)
 			.map((work) => this.toEntry(work));
-		return { content, hasnext: false, length: content.length };
+		return {
+			entries: { content, hasnext: false, length: content.length },
+			settings,
+		};
 	}
 
 	async detail(
@@ -401,7 +414,7 @@ export default class extends DionExtension implements SourceProvider {
 			);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

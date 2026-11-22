@@ -57,7 +57,7 @@ describe("Extension (live)", () => {
 
 	it("should browse the 66 books with no network calls", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page0 = await extension!.browse(0);
+		const page0 = (await extension!.browse(0, {})).entries;
 		expect(page0.content).toHaveLength(PAGE_SIZE);
 		expect(page0.hasnext).toBe(true);
 		expect(page0.length).toBe(66);
@@ -69,14 +69,14 @@ describe("Extension (live)", () => {
 			expect(entry.title.length).toBeGreaterThan(0);
 			expect(entry.url.startsWith("https://bible-api.com/")).toBe(true);
 		}
-		const last = await extension!.browse(2);
+		const last = (await extension!.browse(2, {})).entries;
 		expect(last.content).toHaveLength(66 - 2 * PAGE_SIZE);
 		expect(last.hasnext).toBe(false);
 	});
 
 	it("should search for books by name", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "john");
+		const result = (await extension!.search(0, "john", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.map((entry) => entry.title)).toEqual([
 			"John",

@@ -632,7 +632,7 @@ describe("Extension", () => {
 
 	it("should browse the catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content.length).toBe(PAGE_SIZE);
 		expect(result.hasnext).toBe(true);
 		expect(result.content[0]!.media_type).toBe("Book");
@@ -646,7 +646,7 @@ describe("Extension", () => {
 
 	it("should paginate the catalog without duplicates", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids0 = browseResult.map((e) => e.id.uid);
 		const ids1 = page1.content.map((e) => e.id.uid);
@@ -657,7 +657,7 @@ describe("Extension", () => {
 
 	it("should search the catalog for a title term", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "flight");
+		const result = (await extension!.search(0, "flight", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(false);
 		expect(result.content.map((e) => e.id.uid)).toContain("lw/01fftd");
@@ -669,19 +669,20 @@ describe("Extension", () => {
 
 	it("should also match searches against the series and author", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const bySeries = await extension!.search(0, "lone wolf");
+		const bySeries = (await extension!.search(0, "lone wolf", {})).entries;
 		expect(bySeries.content.length).toBeGreaterThan(10);
-		const byAuthor = await extension!.search(0, "joe dever");
+		const byAuthor = (await extension!.search(0, "joe dever", {})).entries;
 		expect(byAuthor.content.length).toBeGreaterThan(10);
 	});
 
 	it("should return nothing for empty searches or past-the-end pages", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content.length).toBe(0);
-		const page1 = await extension!.search(1, "flight");
+		const page1 = (await extension!.search(1, "flight", {})).entries;
 		expect(page1.content.length).toBe(0);
-		const nohit = await extension!.search(0, "no such gamebook xyz");
+		const nohit = (await extension!.search(0, "no such gamebook xyz", {}))
+			.entries;
 		expect(nohit.content.length).toBe(0);
 		expect(nohit.hasnext).toBe(false);
 	});

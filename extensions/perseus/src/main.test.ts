@@ -280,7 +280,7 @@ describe("Extension", () => {
 
 	it("should browse the curated catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result.content.length).toBe(10);
 		expect(result.hasnext).toBe(true);
 		expect(result.content[0]!.id.uid).toBe("iliad");
@@ -292,7 +292,7 @@ describe("Extension", () => {
 
 	it("should paginate the catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(1);
+		const result = (await extension!.browse(1, {})).entries;
 		expect(result.content.length).toBe(WORKS.length - 10);
 		expect(result.hasnext).toBe(false);
 		expect(result.content.map((e) => e.id.uid)).not.toContain("iliad");
@@ -302,13 +302,13 @@ describe("Extension", () => {
 
 	it("should search the catalog by title and author", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const iliad = await extension!.search(0, "iliad");
+		const iliad = (await extension!.search(0, "iliad", {})).entries;
 		expect(iliad.content.map((e) => e.id.uid)).toEqual(["iliad"]);
-		const vergil = await extension!.search(0, "vergil");
+		const vergil = (await extension!.search(0, "vergil", {})).entries;
 		expect(vergil.content.map((e) => e.id.uid)).toEqual(["aeneid", "georgics"]);
-		const none = await extension!.search(0, "zzz-no-such-work");
+		const none = (await extension!.search(0, "zzz-no-such-work", {})).entries;
 		expect(none.content).toHaveLength(0);
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content).toHaveLength(0);
 	}, 120_000);
 

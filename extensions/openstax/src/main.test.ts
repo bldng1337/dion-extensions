@@ -280,7 +280,7 @@ describe("Extension", () => {
 
 	it("should be able to browse", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -289,7 +289,7 @@ describe("Extension", () => {
 	}, 30_000);
 
 	it("should paginate browse results", async () => {
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		expect(page1.hasnext).toBe(true);
 		const ids0 = browseResult.map((e) => e.id.uid);
@@ -301,7 +301,7 @@ describe("Extension", () => {
 
 	it("should be able to search", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "physics");
+		const result = (await extension!.search(0, "physics", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		await assertValidEntries(result.content);
@@ -310,10 +310,10 @@ describe("Extension", () => {
 	}, 30_000);
 
 	it("should return no results for empty or unmatched searches", async () => {
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content.length).toBe(0);
 		expect(empty.hasnext).toBe(false);
-		const unmatched = await extension!.search(0, "zzqxj");
+		const unmatched = (await extension!.search(0, "zzqxj", {})).entries;
 		expect(unmatched.content.length).toBe(0);
 	});
 

@@ -225,7 +225,7 @@ describe("Extension", () => {
 
 	it("should be able to browse curated series", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -243,7 +243,7 @@ describe("Extension", () => {
 	}, 60_000);
 	it("should page through the series list to the end", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page = await extension!.browse(1);
+		const page = (await extension!.browse(1, {})).entries;
 		await assertValidEntries(page.content);
 		// 21 curated series at 20 per page: page 2 holds the remainder.
 		expect(page.content.length + browseResult.length).toBeGreaterThanOrEqual(
@@ -254,7 +254,7 @@ describe("Extension", () => {
 
 	it("should be able to search for a series", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "x minus one");
+		const result = (await extension!.search(0, "x minus one", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
@@ -269,7 +269,7 @@ describe("Extension", () => {
 
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	});

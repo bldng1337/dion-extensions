@@ -1,8 +1,8 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import {
 	Dropdown,
-	ExtensionSetting,
 	SettingStore,
+	defineStoreSetting,
 } from "@dion-js/runtime-lib/settings.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -10,7 +10,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	Setting,
 	SourceResult,
@@ -88,34 +88,57 @@ function listingToEntries(body: string): Entry[] {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		shelf: new ExtensionSetting<string>(SHELF_SETTING_ID, "popular", "Search")
-			.setLabel("Browse collection")
-			.setUI(new Dropdown(SHELVES)),
+	settings = {};
+	searchSettings = {
+		shelf: defineStoreSetting<string>(SHELF_SETTING_ID, {
+			default: "popular",
+			label: "Browse collection",
+			ui: new Dropdown(SHELVES),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
 
-	async browse(page: number): Promise<EntryList> {
-		const shelf = await this.settings.shelf.get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const shelf = this.searchSettings.shelf.get(store);
 		const start = Math.max(0, page) * PAGE_SIZE;
 		const url =
 			shelf === "popular"
 				? `${BASE}/ebooks/search.opds/?sort_order=downloads&start_index=${start}`
 				: `${BASE}/ebooks/bookshelf/${shelf}.opds?start_index=${start}`;
 		const content = listingToEntries(await fetchOpds(url));
-		return { content, hasnext: content.length >= PAGE_SIZE };
+		return {
+			entries: { content, hasnext: content.length >= PAGE_SIZE },
+			settings: store.toMap(),
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const start = Math.max(0, page) * PAGE_SIZE;
 		const url = `${BASE}/ebooks/search.opds/?query=${encodeURIComponent(query)}&start_index=${start}`;
 		const content = listingToEntries(await fetchOpds(url));
-		return { content, hasnext: content.length >= PAGE_SIZE };
+		return {
+			entries: { content, hasnext: content.length >= PAGE_SIZE },
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(

@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -420,24 +420,40 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const { items, hasnext } = slicePage(
 			await this.fetchBooks(),
 			page,
 			PAGE_SIZE,
 		);
-		return { content: items.map((card) => this.cardToEntry(card)), hasnext };
+		return {
+			entries: {
+				content: items.map((card) => this.cardToEntry(card)),
+				hasnext,
+			},
+			settings,
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = filter.trim();
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const result = await this.fetchSearchPage(term, Math.max(0, page));
 		return {
-			content: result.books.map((card) => this.cardToEntry(card)),
-			hasnext: result.hasnext,
+			entries: {
+				content: result.books.map((card) => this.cardToEntry(card)),
+				hasnext: result.hasnext,
+			},
+			settings,
 		};
 	}
 

@@ -364,7 +364,7 @@ describe("Extension", () => {
 
 	it("should be able to browse feature films", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
@@ -382,24 +382,30 @@ describe("Extension", () => {
 
 	it("should be able to browse a different collection", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		await extension!.setSetting(COLLECTION_SETTING_ID, "Search", {
-			type: "String",
-			data: "prelinger",
+		// Browse settings are embedder-owned now: definitions come back from
+		// browse itself and overrides are passed in per call (nothing is
+		// persisted host-side, so no restore is needed afterwards).
+		const defs = (await extension!.browse(0, {})).settings;
+		const def = defs[COLLECTION_SETTING_ID];
+		if (!def) throw new Error("collection setting definition missing");
+		const withCollection = (data: string): Setting => ({
+			...def,
+			value: { type: "String", data },
 		});
-		const result = await extension!.browse(0);
+		const result = (
+			await extension!.browse(0, {
+				[COLLECTION_SETTING_ID]: withCollection("prelinger"),
+			})
+		).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content.slice(0, 3)) {
 			expect(entry.media_type).toBe("Video");
 		}
-		await extension!.setSetting(COLLECTION_SETTING_ID, "Search", {
-			type: "String",
-			data: "feature_films",
-		});
 	}, 120_000);
 
 	it("should be able to search for a film", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "nosferatu");
+		const result = (await extension!.search(0, "nosferatu", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
@@ -414,7 +420,7 @@ describe("Extension", () => {
 
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	});
@@ -445,7 +451,7 @@ describe("Extension", () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
 		// "duck and cover": the top feature_films hit is the 9-minute civil
 		// defense short, whose item carries exactly one deduplicated video.
-		const result = await extension!.search(0, "duck and cover");
+		const result = (await extension!.search(0, "duck and cover", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		const target = result.content[0]!;
 		const detail = await extension!.detail(target.id, {});

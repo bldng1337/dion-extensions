@@ -222,7 +222,7 @@ describe("Extension", () => {
 
 	it("should browse featured texts", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -234,7 +234,7 @@ describe("Extension", () => {
 
 	it("should paginate browse results", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids0 = browseResult.map((e) => e.id.uid);
 		const ids1 = page1.content.map((e) => e.id.uid);
@@ -244,7 +244,7 @@ describe("Extension", () => {
 
 	it("should search for works", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "Sherlock Holmes");
+		const result = (await extension!.search(0, "Sherlock Holmes", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		const titles = result.content.map((e) => e.title.toLowerCase());
 		expect(titles.some((t) => t.includes("sherlock"))).toBe(true);
@@ -252,7 +252,7 @@ describe("Extension", () => {
 	}, 120_000);
 
 	it("should return no results for an empty search", async () => {
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	});

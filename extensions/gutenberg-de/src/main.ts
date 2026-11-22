@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -194,11 +194,17 @@ export default class extends DionExtension implements SourceProvider {
 	 * ("/bibliothek/?gl_letter=L&gl_page=N", 100 items per page), continuing
 	 * from letter to letter until the catalog is exhausted.
 	 */
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		if (Math.max(0, page) === 0) {
 			return {
-				content: itemsToEntries(await listingItems(NEW_URL)),
-				hasnext: true,
+				entries: {
+					content: itemsToEntries(await listingItems(NEW_URL)),
+					hasnext: true,
+				},
+				settings,
 			};
 		}
 
@@ -211,26 +217,36 @@ export default class extends DionExtension implements SourceProvider {
 			if (flat < pages) {
 				const info = await catalogPage(letter, flat + 1);
 				return {
-					content: itemsToEntries(info.items),
-					hasnext: flat + 1 < pages || i < LETTERS.length - 1,
+					entries: {
+						content: itemsToEntries(info.items),
+						hasnext: flat + 1 < pages || i < LETTERS.length - 1,
+					},
+					settings,
 				};
 			}
 			flat -= pages;
 		}
-		return { content: [], hasnext: false };
+		return { entries: { content: [], hasnext: false }, settings };
 	}
 
 	/** The site's server-side search (scopes "Autoren + Titel", the web
 	 * form's defaults). The result page is not paginated; author-group hits
 	 * are skipped because they link to author pages, not books. */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
 		if (query.length === 0 || Math.max(0, page) > 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		return {
-			content: itemsToEntries(await listingItems(searchUrl(query))),
-			hasnext: false,
+			entries: {
+				content: itemsToEntries(await listingItems(searchUrl(query))),
+				hasnext: false,
+			},
+			settings,
 		};
 	}
 
@@ -320,7 +336,7 @@ export default class extends DionExtension implements SourceProvider {
 			);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

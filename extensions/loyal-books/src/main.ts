@@ -1,5 +1,5 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import { Dropdown, defineStoreSetting } from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -9,6 +9,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -203,17 +204,18 @@ function catalogPage(items: CatalogItem[], page: number): EntryList {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		category: new ExtensionSetting<string>(
-			"category",
-			CATEGORY_POPULAR,
-			"Search",
-		)
-			.setLabel("Browse")
-			.setUI(new Dropdown(CATEGORY_OPTIONS)),
-		language: new ExtensionSetting<string>("language", "English", "Search")
-			.setLabel("Language")
-			.setUI(new Dropdown(LANGUAGE_OPTIONS)),
+	settings = {};
+	searchSettings = {
+		category: defineStoreSetting<string>("category", {
+			default: CATEGORY_POPULAR,
+			label: "Browse",
+			ui: new Dropdown(CATEGORY_OPTIONS),
+		}),
+		language: defineStoreSetting<string>("language", {
+			default: "English",
+			label: "Language",
+			ui: new Dropdown(LANGUAGE_OPTIONS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -224,24 +226,41 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
-		const language = await this.settings.language.get();
-		const category = await this.settings.category.get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const language = this.searchSettings.language.get(store);
+		const category = this.searchSettings.category.get(store);
 		const url = listingUrl(language, category, page);
 		if (url === null) {
 			// "All books": paginate the sitemap catalog client-side.
-			return catalogPage(await loadCatalog(), page);
+			return {
+				entries: catalogPage(await loadCatalog(), page),
+				settings: store.toMap(),
+			};
 		}
 		const { entries, totalPages } = parseListing(
 			await fetchText(url, "listing"),
 		);
 		return {
-			content: entries.map(listingToEntry),
-			hasnext: Math.max(0, page) + 1 < totalPages,
+			entries: {
+				content: entries.map(listingToEntry),
+				hasnext: Math.max(0, page) + 1 < totalPages,
+			},
+			settings: store.toMap(),
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		// No server-side search exists (the site embeds Google Custom Search),
 		// so filter the full catalog client-side.
 		const terms = filter
@@ -249,14 +268,17 @@ export default class extends DionExtension implements SourceProvider {
 			.split(/\s+/)
 			.filter((term) => term.length > 0);
 		if (terms.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const catalog = await loadCatalog();
 		const matches = catalog.filter((item) => {
 			const haystack = `${item.title} ${item.author}`.toLowerCase();
 			return terms.every((term) => haystack.includes(term));
 		});
-		return catalogPage(matches, page);
+		return { entries: catalogPage(matches, page), settings: store.toMap() };
 	}
 
 	async detail(

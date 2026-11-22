@@ -348,7 +348,7 @@ describe("Extension", () => {
 
 	it("should browse the newest additions", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -360,7 +360,7 @@ describe("Extension", () => {
 
 	it("should paginate into the A–Z catalog", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		const ids0 = browseResult.map((e) => e.id.uid);
 		const ids1 = page1.content.map((e) => e.id.uid);
@@ -370,7 +370,7 @@ describe("Extension", () => {
 
 	it("should search for faust", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "faust");
+		const result = (await extension!.search(0, "faust", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(false);
 		const titles = result.content.map((e) => e.title.toLowerCase());
@@ -380,7 +380,7 @@ describe("Extension", () => {
 	}, 120_000);
 
 	it("should return no results for an empty search", async () => {
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content.length).toBe(0);
 		expect(empty.hasnext).toBe(false);
 	});

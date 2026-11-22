@@ -1,5 +1,9 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import {
+	Dropdown,
+	SettingStore,
+	defineStoreSetting,
+} from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -9,6 +13,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -221,14 +226,13 @@ function episodeName(video: PickedVideo, index: number): string {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		collection: new ExtensionSetting<string>(
-			COLLECTION_SETTING_ID,
-			DEFAULT_COLLECTION,
-			"Search",
-		)
-			.setLabel("Collection")
-			.setUI(new Dropdown(COLLECTIONS)),
+	settings = {};
+	searchSettings = {
+		collection: defineStoreSetting<string>(COLLECTION_SETTING_ID, {
+			default: DEFAULT_COLLECTION,
+			label: "Collection",
+			ui: new Dropdown(COLLECTIONS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -239,8 +243,12 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	private async list(page: number, term?: string): Promise<EntryList> {
-		const collection = await this.settings.collection.get();
+	private async list(
+		page: number,
+		term: string | undefined,
+		store: SettingStore,
+	): Promise<EntryList> {
+		const collection = this.searchSettings.collection.get(store);
 		const { docs, hasMore } = await searchArchive(
 			buildQuery({ collection, term }),
 			page,
@@ -252,16 +260,36 @@ export default class extends DionExtension implements SourceProvider {
 	}
 
 	/** Pages through the most-downloaded open movies of the chosen collection. */
-	async browse(page: number): Promise<EntryList> {
-		return this.list(page);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		return {
+			entries: await this.list(page, undefined, store),
+			settings: store.toMap(),
+		};
 	}
 
 	/** Title search within the chosen collection's open movies. */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		if (filter.trim().length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
-		return this.list(page, filter);
+		return {
+			entries: await this.list(page, filter, store),
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(

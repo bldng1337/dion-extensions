@@ -32,7 +32,7 @@ function pick(entries: Entry[], prefix: string): Entry {
 }
 
 async function searchFirst(prefix: string, query: string): Promise<Entry> {
-	const result = await extension!.search(0, query);
+	const result = (await extension!.search(0, query, {})).entries;
 	await assertValidEntries(result.content);
 	return pick(result.content, prefix);
 }
@@ -69,7 +69,7 @@ describe("Extension", () => {
 	});
 	it("should be able to browse the newest content", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.hasnext).toBe(true);
@@ -82,14 +82,14 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should paginate browse", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page1 = await extension!.browse(1);
+		const page1 = (await extension!.browse(1, {})).entries;
 		expect(page1.content.length).toBeGreaterThan(0);
 		expect(page1.content[0]!.id.uid).not.toBe(browseResult[0]!.id.uid);
 		await assertValidEntries(page1.content);
 	}, 120_000);
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	});

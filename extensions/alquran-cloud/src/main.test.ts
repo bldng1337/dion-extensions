@@ -70,7 +70,7 @@ describe("Extension (live)", () => {
 
 	it("should browse the 114 surahs with one cached list call", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const page0 = await extension!.browse(0);
+		const page0 = (await extension!.browse(0, {})).entries;
 		expect(page0.content).toHaveLength(PAGE_SIZE);
 		expect(page0.hasnext).toBe(true);
 		expect(page0.length).toBe(114);
@@ -82,14 +82,14 @@ describe("Extension (live)", () => {
 			expect(entry.title).toMatch(/^\d+\. .+ \(.+\)$/);
 			expect(entry.url.startsWith("https://alquran.cloud/surah/")).toBe(true);
 		}
-		const last = await extension!.browse(4);
+		const last = (await extension!.browse(4, {})).entries;
 		expect(last.content).toHaveLength(114 - 4 * PAGE_SIZE);
 		expect(last.hasnext).toBe(false);
 	});
 
 	it("should search surahs by name", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "kahf");
+		const result = (await extension!.search(0, "kahf", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.map((entry) => entry.title)).toEqual([
 			"18. Al-Kahf (The Cave)",

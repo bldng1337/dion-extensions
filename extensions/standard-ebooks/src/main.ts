@@ -1,8 +1,8 @@
 import { DionExtension } from "@dion-js/runtime-lib";
 import {
 	Dropdown,
-	ExtensionSetting,
 	SettingStore,
+	defineStoreSetting,
 } from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
@@ -13,6 +13,7 @@ import type {
 	EntryDetailedResult,
 	EntryId,
 	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -96,10 +97,13 @@ async function fetchEntries(
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		sort: new ExtensionSetting<string>(SORT_SETTING_ID, "default", "Search")
-			.setLabel("Sort by")
-			.setUI(new Dropdown(SORTS)),
+	settings = {};
+	searchSettings = {
+		sort: defineStoreSetting<string>(SORT_SETTING_ID, {
+			default: "default",
+			label: "Sort by",
+			ui: new Dropdown(SORTS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -110,18 +114,38 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
-		const sort = await this.settings.sort.get();
-		return fetchEntries(page, null, sort);
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const sort = this.searchSettings.sort.get(store);
+		return {
+			entries: await fetchEntries(page, null, sort),
+			settings: store.toMap(),
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
-		const sort = await this.settings.sort.get();
-		return fetchEntries(page, query, sort);
+		const sort = this.searchSettings.sort.get(store);
+		return {
+			entries: await fetchEntries(page, query, sort),
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(

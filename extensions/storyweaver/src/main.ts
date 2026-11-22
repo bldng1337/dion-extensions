@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -192,19 +192,29 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const result = await fetchBooksPage({
 			page: Math.max(0, page) + 1,
 			sort: String(await this.settings.sort.get()),
 			language: String(await this.settings.language.get()).trim(),
 		});
-		return { content: result.books, hasnext: result.hasNext };
+		return {
+			entries: { content: result.books, hasnext: result.hasNext },
+			settings,
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const result = await fetchBooksPage({
 			page: Math.max(0, page) + 1,
@@ -212,7 +222,10 @@ export default class extends DionExtension implements SourceProvider {
 			sort: "Relevance",
 			language: String(await this.settings.language.get()).trim(),
 		});
-		return { content: result.books, hasnext: result.hasNext };
+		return {
+			entries: { content: result.books, hasnext: result.hasNext },
+			settings,
+		};
 	}
 
 	async detail(

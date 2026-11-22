@@ -81,8 +81,8 @@ describe("Extension with tagged files", () => {
 		// Two untaggable files ahead of the one tagged file, to show that the
 		// per-folder budget counts reads rather than files.
 		const mixed = mkdirSync(join(libroot, "Mixed"), { recursive: true });
-		writeFileSync(join(mixed!, "a.pdf"), "%PDF-1.4 not really a pdf");
-		writeFileSync(join(mixed!, "b.pdf"), "%PDF-1.4 not really a pdf");
+		writeFileSync(join(mixed!, "a.txt"), "plain text");
+		writeFileSync(join(mixed!, "b.txt"), "plain text");
 		writeFileSync(
 			join(mixed!, "c.mp3"),
 			makeMp3({ title: "The Only Tagged One", artist: "Solo" }, TRACK_FRAMES),
@@ -194,7 +194,7 @@ describe("Extension with tagged files", () => {
 	});
 
 	it("should reuse the tags it already read when browsing", async () => {
-		const { content } = await extension.browse(0);
+		const { content } = (await extension.browse(0, {})).entries;
 		const byUid = new Map(content.map((entry) => [entry.id.uid, entry]));
 		expect(byUid.get("standalone-book.epub")?.title).toBe(
 			"Pride and Prejudice",
@@ -212,9 +212,9 @@ describe("Extension with tagged files", () => {
 	it("should find a file by the name its tags give it", async () => {
 		// Works because the browse above already read those tags: search never
 		// reads a file itself, it matches what is already known.
-		const found = await extension.search(0, "greatest");
+		const found = (await extension.search(0, "greatest", {})).entries;
 		expect(found.content.map((entry) => entry.id.uid)).toEqual(["Album/"]);
-		const book = await extension.search(0, "pride");
+		const book = (await extension.search(0, "pride", {})).entries;
 		expect(book.content.map((entry) => entry.id.uid)).toEqual([
 			"standalone-book.epub",
 		]);
@@ -264,8 +264,8 @@ describe("Extension with tagged files", () => {
 		});
 		const { entry } = await extension.detail({ uid: "Mixed/" }, {});
 		expect(entry.titles).toEqual(["Mixed"]);
-		// The two PDFs are skipped without being read, so the one file that
-		// could be read within the budget still is.
+		// The two text files are skipped without being read, so the one file
+		// that could be read within the budget still is.
 		expect(entry.episodes.map((episode) => episode.name)).toEqual([
 			"a",
 			"b",

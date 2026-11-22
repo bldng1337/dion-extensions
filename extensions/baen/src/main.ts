@@ -6,7 +6,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -299,19 +299,29 @@ export default class extends DionExtension implements SourceProvider {
 		};
 	}
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const books = await loadCatalog();
 		const start = Math.max(0, page) * PAGE_SIZE;
 		const content = books
 			.slice(start, start + PAGE_SIZE)
 			.map((book) => this.bookToEntry(book));
-		return { content, hasnext: books.length > start + PAGE_SIZE };
+		return {
+			entries: { content, hasnext: books.length > start + PAGE_SIZE },
+			settings,
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = normalizeForSearch(filter.trim());
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const books = await loadCatalog();
 		const matches = books.filter((book) => {
@@ -319,7 +329,7 @@ export default class extends DionExtension implements SourceProvider {
 				return true;
 			}
 			if (normalizeForSearch(book.sku).includes(term)) {
-				return true;
+				return { entries: true, settings };
 			}
 			const author = authorCache.get(book.sku);
 			return author ? normalizeForSearch(author).includes(term) : false;
@@ -328,7 +338,10 @@ export default class extends DionExtension implements SourceProvider {
 		const content = matches
 			.slice(start, start + PAGE_SIZE)
 			.map((book) => this.bookToEntry(book));
-		return { content, hasnext: matches.length > start + PAGE_SIZE };
+		return {
+			entries: { content, hasnext: matches.length > start + PAGE_SIZE },
+			settings,
+		};
 	}
 
 	/** Cover page (title/author/blurb), TOC and frameset; each degrades to
@@ -466,7 +479,7 @@ export default class extends DionExtension implements SourceProvider {
 		const html = await fetchText(chapterFileUrl(ref.sku, ref.file));
 		const paragraphs = htmlToParagraphs(html);
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

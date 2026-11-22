@@ -6,7 +6,7 @@ import type {
 	EntryDetailedResult,
 	EntryDetailed,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Entry,
 	Episode,
 	EpisodeId,
@@ -410,22 +410,32 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const { docs, hasMore } = await searchArchive(
 			"collection:librivoxaudio",
 			page,
 			"addeddate desc",
 		);
 		return {
-			content: docs.map(iaDocToEntry),
-			hasnext: hasMore,
+			entries: {
+				content: docs.map(iaDocToEntry),
+				hasnext: hasMore,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = sanitizeQueryTerm(filter);
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const { docs, hasMore } = await searchArchive(
 			`collection:librivoxaudio AND (title:(${term}) OR creator:(${term}))`,
@@ -433,8 +443,11 @@ export default class extends DionExtension implements SourceProvider {
 			"downloads desc",
 		);
 		return {
-			content: docs.map(iaDocToEntry),
-			hasnext: hasMore,
+			entries: {
+				content: docs.map(iaDocToEntry),
+				hasnext: hasMore,
+			},
+			settings,
 		};
 	}
 

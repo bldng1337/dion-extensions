@@ -387,7 +387,7 @@ describe("Extension", () => {
 	});
 	it("should be able to browse", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBe(PAGE_SIZE);
 		expect(result.hasnext).toBe(true);
@@ -403,7 +403,7 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should be able to search", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "big sister");
+		const result = (await extension!.search(0, "big sister", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
@@ -418,7 +418,7 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 30_000);

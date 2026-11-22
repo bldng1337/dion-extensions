@@ -1,5 +1,5 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import { Dropdown, defineStoreSetting } from "@dion-js/runtime-lib/settings.js";
 import { Column, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -8,7 +8,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -136,10 +136,13 @@ function listingToEntry(item: ListingEntry): Entry {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		category: new ExtensionSetting<string>("category", CATEGORY_ALL, "Search")
-			.setLabel("Kategorie")
-			.setUI(new Dropdown(CATEGORY_OPTIONS)),
+	settings = {};
+	searchSettings = {
+		category: defineStoreSetting<string>("category", {
+			default: CATEGORY_ALL,
+			label: "Kategorie",
+			ui: new Dropdown(CATEGORY_OPTIONS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -150,40 +153,72 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
-		const category = await this.settings.category.get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const category = this.searchSettings.category.get(store);
 		if (category === CATEGORY_ALL) {
 			const listing = await loadListing(listingUrl(page));
 			return {
-				content: listing.entries.map(listingToEntry),
-				hasnext: Math.max(0, page) + 1 < listing.totalPages,
+				entries: {
+					content: listing.entries.map(listingToEntry),
+					hasnext: Math.max(0, page) + 1 < listing.totalPages,
+				},
+				settings: store.toMap(),
 			};
 		}
 		// The curated pages are single-page listings.
 		if (page > 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const url = curatedUrl(category);
 		if (url === null) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const listing = await loadListing(url);
-		return { content: listing.entries.map(listingToEntry), hasnext: false };
+		return {
+			entries: { content: listing.entries.map(listingToEntry), hasnext: false },
+			settings: store.toMap(),
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const term = filter.trim();
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const html = await fetchText(searchUrl(term, page), "search");
 		const total = parseResultCount(html);
 		if (total === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		return {
-			content: parseListing(html).map(listingToEntry),
-			hasnext: (Math.max(0, page) + 1) * SEARCH_PAGE_SIZE < total,
+			entries: {
+				content: parseListing(html).map(listingToEntry),
+				hasnext: (Math.max(0, page) + 1) * SEARCH_PAGE_SIZE < total,
+			},
+			settings: store.toMap(),
 		};
 	}
 

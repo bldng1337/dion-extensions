@@ -278,7 +278,7 @@ describe("Extension", () => {
 	});
 	it("should be able to browse the mirror set", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.content.length).toBeLessThanOrEqual(20);
@@ -298,13 +298,13 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should return nothing past the end of the mirror set", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(100);
+		const result = (await extension!.browse(100, {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 60_000);
 	it("should be able to search mirror titles", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "nightmare");
+		const result = (await extension!.search(0, "nightmare", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		// The Nightmare (St. John) issues are DCM-mirrored page-image items.
@@ -319,7 +319,7 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 30_000);

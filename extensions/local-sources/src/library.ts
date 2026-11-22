@@ -49,11 +49,11 @@ export function kindForFilename(name: string): FileKind | null {
 }
 
 /**
- * Whether a file is a container the host can read tags out of. A PDF or text
- * file carries none, so there is nothing to gain by reading it whole.
+ * Whether a file is a container the host can read tags out of. A text file
+ * carries none, so there is nothing to gain by reading it whole.
  */
 export function carriesMetadata(kind: FileKind): boolean {
-	return kind === "epub" || kind === "mp3" || kind === "mp4";
+	return kind === "epub" || kind === "pdf" || kind === "mp3" || kind === "mp4";
 }
 
 /**

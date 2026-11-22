@@ -1,5 +1,5 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import { Dropdown, defineStoreSetting } from "@dion-js/runtime-lib/settings.js";
 import { Column, Divider, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -151,22 +151,19 @@ function loadArticle(slug: string): Promise<ArticleInfo> {
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		[SERIES_SETTING_ID]: new ExtensionSetting<string>(
-			SERIES_SETTING_ID,
-			ALL_SERIES,
-			"Search",
-		)
-			.setLabel("Series")
-			.setUI(
-				new Dropdown([
-					{ value: ALL_SERIES, label: "All series" },
-					...SERIES.map((series) => ({
-						value: series.slug,
-						label: series.label,
-					})),
-				]),
-			),
+	settings = {};
+	searchSettings = {
+		[SERIES_SETTING_ID]: defineStoreSetting<string>(SERIES_SETTING_ID, {
+			default: ALL_SERIES,
+			label: "Series",
+			ui: new Dropdown([
+				{ value: ALL_SERIES, label: "All series" },
+				...SERIES.map((series) => ({
+					value: series.slug,
+					label: series.label,
+				})),
+			]),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -182,10 +179,18 @@ export default class extends DionExtension implements SourceProvider {
 	 * cached per session), 24 entries per page. The "Series" search filter
 	 * narrows the listing ("All series" concatenates every series in order).
 	 */
-	async browse(page: number): Promise<EntryList> {
-		const series = await this.settings[SERIES_SETTING_ID].get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const series = this.searchSettings[SERIES_SETTING_ID].get(store);
 		const items = await this.itemsFor(series);
-		return paginate(items.map(toEntry), page);
+		return {
+			entries: paginate(items.map(toEntry), page),
+			settings: store.toMap(),
+		};
 	}
 
 	/**
@@ -194,16 +199,28 @@ export default class extends DionExtension implements SourceProvider {
 	 * listings, matching against the number and the listing title. Scope:
 	 * mainline SCP containment files only — not tales, canons or -J jokes.
 	 */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const query = filter.trim().toLowerCase();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 		const items = await this.itemsFor(ALL_SERIES);
 		const hits = items.filter((item) =>
 			`${item.number} ${item.title ?? ""}`.toLowerCase().includes(query),
 		);
-		return paginate(hits.map(toEntry), page);
+		return {
+			entries: paginate(hits.map(toEntry), page),
+			settings: store.toMap(),
+		};
 	}
 
 	async detail(
@@ -277,7 +294,7 @@ export default class extends DionExtension implements SourceProvider {
 			throw new Error(`SCP Wiki: no readable content in "${parsed.slug}"`);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}

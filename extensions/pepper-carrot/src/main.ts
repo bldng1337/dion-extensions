@@ -6,7 +6,7 @@ import type {
 	CustomUI,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	Setting,
 	SourceResult,
@@ -216,20 +216,30 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const lang = normalizeLang(await this.settings.language.get());
 		const episodes = await listingWithFallback(lang);
 		const entries = episodes
 			.map(episodeToEntry)
 			.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
 		const result = paginate(entries, page, PAGE_SIZE);
-		return { content: result.content, hasnext: result.hasnext };
+		return {
+			entries: { content: result.content, hasnext: result.hasnext },
+			settings,
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const lang = normalizeLang(await this.settings.language.get());
 		const episodes = await listingWithFallback(lang);
@@ -238,7 +248,10 @@ export default class extends DionExtension implements SourceProvider {
 			.map(episodeToEntry)
 			.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
 		const result = paginate(hits, page, PAGE_SIZE);
-		return { content: result.content, hasnext: result.hasnext };
+		return {
+			entries: { content: result.content, hasnext: result.hasnext },
+			settings,
+		};
 	}
 
 	async detail(

@@ -49,7 +49,7 @@ describe("Extension with a configured library folder", () => {
 	});
 
 	it("should browse the configured folder", async () => {
-		const result = await extension.browse(0);
+		const result = (await extension.browse(0, {})).entries;
 		expect(result.content.map((entry) => entry.title).sort()).toEqual([
 			"Clip",
 			"Series",
@@ -70,7 +70,7 @@ describe("Extension with a configured library folder", () => {
 			type: "String",
 			data: libroot.replaceAll("\\", "/"),
 		});
-		const result = await extension.browse(0);
+		const result = (await extension.browse(0, {})).entries;
 		expect(result.content.length).toBe(5);
 	});
 

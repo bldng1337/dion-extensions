@@ -299,7 +299,7 @@ describe("Extension", () => {
 	});
 	it("should be able to browse", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(0);
+		const result = (await extension!.browse(0, {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(30);
 		expect(result.content.length).toBeLessThanOrEqual(40);
@@ -326,13 +326,13 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should return nothing past the last page", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.browse(1);
+		const result = (await extension!.browse(1, {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 60_000);
 	it("should be able to search", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "pepper");
+		const result = (await extension!.search(0, "pepper", {})).entries;
 		expect(result).toBeDefined();
 		expect(result.content.length).toBeGreaterThan(0);
 		for (const entry of result.content) {
@@ -346,7 +346,7 @@ describe("Extension", () => {
 	}, 120_000);
 	it("should also find episodes by number", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "39");
+		const result = (await extension!.search(0, "39", {})).entries;
 		expect(result.content.length).toBeGreaterThan(0);
 		expect(result.content.some((e) => e.id.uid === "ep39_The-Tavern")).toBe(
 			true,
@@ -354,7 +354,7 @@ describe("Extension", () => {
 	}, 60_000);
 	it("should return no results for an empty filter", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const result = await extension!.search(0, "   ");
+		const result = (await extension!.search(0, "   ", {})).entries;
 		expect(result.content.length).toBe(0);
 		expect(result.hasnext).toBe(false);
 	}, 30_000);

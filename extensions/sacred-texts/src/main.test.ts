@@ -56,7 +56,7 @@ let siteUp = true;
 	extension = ext;
 	const probe = (async () => {
 		await ext.setEnabled(true);
-		await ext.browse(0);
+		(await ext.browse(0, {})).entries;
 	})();
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	try {
@@ -376,7 +376,7 @@ describe("Extension", () => {
 		"should browse the selected topic, 24 entries per page",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const result = await extension!.browse(0);
+			const result = (await extension!.browse(0, {})).entries;
 			expect(result.content.length).toBeGreaterThan(0);
 			expect(result.content.length).toBeLessThanOrEqual(24);
 			expect(result.hasnext).toBe(true);
@@ -392,7 +392,7 @@ describe("Extension", () => {
 		"should paginate the topic listing",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const page1 = await extension!.browse(1);
+			const page1 = (await extension!.browse(1, {})).entries;
 			expect(page1.content.length).toBeGreaterThan(0);
 			const ids0 = browseResult.map((e) => e.id.uid);
 			const ids1 = page1.content.map((e) => e.id.uid);
@@ -406,7 +406,7 @@ describe("Extension", () => {
 		"should search for edda over listings and sitemap",
 		async () => {
 			if (extension.enabled === false) throw new Error("Extension not enabled");
-			const result = await extension!.search(0, "edda");
+			const result = (await extension!.search(0, "edda", {})).entries;
 			expect(result.content.length).toBeGreaterThan(0);
 			expect(result.content.length).toBeLessThanOrEqual(24);
 			const titles = result.content.map((e) => e.title.toLowerCase());
@@ -418,7 +418,7 @@ describe("Extension", () => {
 
 	it("should return no results for an empty search", async () => {
 		if (extension.enabled === false) throw new Error("Extension not enabled");
-		const empty = await extension!.search(0, "   ");
+		const empty = (await extension!.search(0, "   ", {})).entries;
 		expect(empty.content.length).toBe(0);
 		expect(empty.hasnext).toBe(false);
 	});

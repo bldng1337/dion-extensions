@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -170,24 +170,34 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const latest = await latestNum();
 		const newest = latest - Math.max(0, page) * PAGE_SIZE;
 		if (newest < 1) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const oldest = Math.max(1, newest - PAGE_SIZE + 1);
 		const comics = await fetchComics(numRange(newest, oldest));
 		return {
-			content: comicsToEntries(comics),
-			hasnext: newest - PAGE_SIZE >= 1,
+			entries: {
+				content: comicsToEntries(comics),
+				hasnext: newest - PAGE_SIZE >= 1,
+			},
+			settings,
 		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const configured = Number(await this.settings.searchRange.get());
 		const range =
@@ -197,7 +207,7 @@ export default class extends DionExtension implements SourceProvider {
 		const hits = (await searchWindow(range)).filter((comic) =>
 			matchesComic(comic, query),
 		);
-		return paginate(comicsToEntries(hits), page);
+		return { entries: paginate(comicsToEntries(hits), page), settings };
 	}
 
 	async detail(

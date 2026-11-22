@@ -8,7 +8,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	EpisodeId,
 	EventData,
 	EventResult,
@@ -177,21 +177,28 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const { content, hasnext } = paginate(await allBooks(), page);
-		return { content: rowsToEntries(content), hasnext };
+		return { entries: { content: rowsToEntries(content), hasnext }, settings };
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const query = filter.trim();
 		if (query.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const hits = (await allBooks()).filter((row) =>
 			matchesTitle(row.title, query),
 		);
 		const { content, hasnext } = paginate(hits, page);
-		return { content: rowsToEntries(content), hasnext };
+		return { entries: { content: rowsToEntries(content), hasnext }, settings };
 	}
 
 	async detail(

@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -222,22 +222,41 @@ export default class extends DionExtension implements SourceProvider {
 
 	// -- SourceProvider ------------------------------------------------------
 
-	async browse(page: number): Promise<EntryList> {
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const show = getShow(await this.settings.show.get());
 		const wpPage = Math.max(1, page + 1);
 		const { posts, hasnext } = await fetchListing(show, wpPage, undefined);
-		return { content: posts.map((post) => postToEntry(show, post)), hasnext };
+		return {
+			entries: {
+				content: posts.map((post) => postToEntry(show, post)),
+				hasnext,
+			},
+			settings,
+		};
 	}
 
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
 		const term = filter.trim();
 		if (term.length === 0) {
-			return { content: [], hasnext: false };
+			return { entries: { content: [], hasnext: false }, settings };
 		}
 		const show = getShow(await this.settings.show.get());
 		const wpPage = Math.max(1, page + 1);
 		const { posts, hasnext } = await fetchListing(show, wpPage, term);
-		return { content: posts.map((post) => postToEntry(show, post)), hasnext };
+		return {
+			entries: {
+				content: posts.map((post) => postToEntry(show, post)),
+				hasnext,
+			},
+			settings,
+		};
 	}
 
 	async detail(

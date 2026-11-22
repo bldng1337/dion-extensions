@@ -1,5 +1,5 @@
 import { DionExtension } from "@dion-js/runtime-lib";
-import { Dropdown, ExtensionSetting } from "@dion-js/runtime-lib/settings.js";
+import { Dropdown, defineStoreSetting } from "@dion-js/runtime-lib/settings.js";
 import { Column, Divider, Link, Text } from "@dion-js/runtime-lib/ui.js";
 import type { SourceProvider } from "@dion-js/runtime-types/extension";
 import type {
@@ -7,7 +7,7 @@ import type {
 	EntryDetailed,
 	EntryDetailedResult,
 	EntryId,
-	EntryList,
+	EntryListResult,
 	Episode,
 	EpisodeId,
 	EventData,
@@ -223,14 +223,13 @@ async function chapterUrlFor(
 // ---------------------------------------------------------------------------
 
 export default class extends DionExtension implements SourceProvider {
-	settings = {
-		topic: new ExtensionSetting<string>(
-			TOPIC_SETTING_ID,
-			"legends-sagas",
-			"Search",
-		)
-			.setLabel("Browse topic")
-			.setUI(new Dropdown(TOPICS)),
+	settings = {};
+	searchSettings = {
+		topic: defineStoreSetting<string>(TOPIC_SETTING_ID, {
+			default: "legends-sagas",
+			label: "Browse topic",
+			ui: new Dropdown(TOPICS),
+		}),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -244,14 +243,22 @@ export default class extends DionExtension implements SourceProvider {
 	/** Lists the books of the selected topic, 24 per page (the listing page
 	 * itself carries the topic's whole catalogue; pages are sliced
 	 * client-side). */
-	async browse(page: number): Promise<EntryList> {
-		const topic = await this.settings.topic.get();
+	async browse(
+		page: number,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
+		const topic = this.searchSettings.topic.get(store);
 		const cards = await topicCards(topic);
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: cards.slice(start, start + PAGE_SIZE).map(cardToEntry),
-			hasnext: start + PAGE_SIZE < cards.length,
-			length: cards.length,
+			entries: {
+				content: cards.slice(start, start + PAGE_SIZE).map(cardToEntry),
+				hasnext: start + PAGE_SIZE < cards.length,
+				length: cards.length,
+			},
+			settings: store.toMap(),
 		};
 	}
 
@@ -260,14 +267,23 @@ export default class extends DionExtension implements SourceProvider {
 	 * indexes: the browse-topic listings (real titles + authors) and the
 	 * site's books.xml sitemap (~3000 slug-derived titles). Coverage is
 	 * therefore a large subset of the archive, not its full catalogue. */
-	async search(page: number, filter: string): Promise<EntryList> {
+	async search(
+		page: number,
+		filter: string,
+		settings: Record<string, Setting>,
+	): Promise<EntryListResult> {
+		const store = this.convertSettingStore(settings);
+
 		const tokens = filter
 			.trim()
 			.toLowerCase()
 			.split(/[^a-z0-9]+/)
 			.filter((token) => token.length > 0);
 		if (tokens.length === 0) {
-			return { content: [], hasnext: false };
+			return {
+				entries: { content: [], hasnext: false },
+				settings: store.toMap(),
+			};
 		}
 
 		const results: Entry[] = [];
@@ -298,9 +314,12 @@ export default class extends DionExtension implements SourceProvider {
 
 		const start = Math.max(0, page) * PAGE_SIZE;
 		return {
-			content: results.slice(start, start + PAGE_SIZE),
-			hasnext: start + PAGE_SIZE < results.length,
-			length: results.length,
+			entries: {
+				content: results.slice(start, start + PAGE_SIZE),
+				hasnext: start + PAGE_SIZE < results.length,
+				length: results.length,
+			},
+			settings: store.toMap(),
 		};
 	}
 
@@ -385,7 +404,7 @@ export default class extends DionExtension implements SourceProvider {
 			);
 		}
 		return {
-			source: { type: "Paragraphlist", paragraphs },
+			source: { type: "Paragraphlist", paragraphs, audio: null },
 			settings: { ...settings },
 		};
 	}
