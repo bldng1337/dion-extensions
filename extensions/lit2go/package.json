@@ -1,6 +1,6 @@
 {
 	"name": "lit2go",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Free classic literature audiobooks with read-along passage text, chaptered per passage, from Lit2Go by the University of South Florida.",
 	"icon": "https://etc.usf.edu/favicon.ico",
 	"tags": [

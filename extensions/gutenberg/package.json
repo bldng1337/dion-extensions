@@ -1,6 +1,6 @@
 {
 	"name": "gutenberg",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Browse and read the 79,000+ free public domain eBooks of Project Gutenberg.",
 	"icon": "https://www.gutenberg.org/gutenberg/apple-touch-icon.png",
 	"tags": [

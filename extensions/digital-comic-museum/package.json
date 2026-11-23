@@ -1,6 +1,6 @@
 {
 	"name": "digital-comic-museum",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Public-domain Golden Age comics from the Digital Comic Museum, read from its open Internet Archive mirrors.",
 	"icon": "https://archive.org/favicon.ico",
 	"tags": [

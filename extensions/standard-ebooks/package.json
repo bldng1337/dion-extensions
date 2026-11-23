@@ -1,6 +1,6 @@
 {
 	"name": "standard-ebooks",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Browse and download the carefully produced public domain classic literature ebooks of Standard Ebooks.",
 	"icon": "https://standardebooks.org/images/favicons/favicon-64x64.png",
 	"tags": [

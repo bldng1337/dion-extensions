@@ -1,6 +1,6 @@
 {
 	"name": "alquran-cloud",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Read and listen to the Quran — all 114 surahs in Arabic (Uthmani) with translations and recitations — via the free AlQuran.cloud JSON API.",
 	"icon": "https://alquran.cloud/apple-icon.png",
 	"keywords": [

@@ -1,6 +1,6 @@
 {
 	"name": "wikibooks",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Read open-content textbooks and chapter pages from Wikibooks, the Wikimedia library of free learning materials.",
 	"icon": "https://en.wikibooks.org/favicon.ico",
 	"keywords": [

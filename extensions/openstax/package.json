@@ -1,6 +1,6 @@
 {
 	"name": "openstax",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Browse and download the free peer-reviewed OpenStax textbooks as PDF or EPUB.",
 	"icon": "https://openstax.org/favicon.ico",
 	"tags": [

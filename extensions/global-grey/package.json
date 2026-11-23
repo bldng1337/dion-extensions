@@ -1,6 +1,6 @@
 {
 	"name": "global-grey",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Browse and download the curated public domain ebooks of Global Grey Ebooks as EPUB or PDF.",
 	"icon": "https://www.globalgreyebooks.com/assets/img/favicon-96x96.png",
 	"tags": [

@@ -1,6 +1,6 @@
 {
 	"name": "novellist",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Bind Dion entries to Novellist and track your reading progress.",
 	"icon": "https://www.novellist.co/nl-inverted-logo.png",
 	"tags": [

@@ -1,6 +1,6 @@
 {
 	"name": "loyal-books",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Public-domain audiobooks from Loyal Books",
 	"desc": "Public-domain audiobooks (mostly LibriVox recordings) from Loyal Books, with genre and language browsing, full-catalog search and per-chapter MP3 streams.",
 	"icon": "https://www.loyalbooks.com/image/ui/logo.png",

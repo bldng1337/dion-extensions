@@ -1,6 +1,6 @@
 {
 	"name": "vorleser",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Free German audiobooks from vorleser.net",
 	"desc": "Kostenlose deutsche Hörbücher von vorleser.net: public-domain texts (Grimm, Kafka, Jules Verne ...) read by volunteers, with curated browse categories, site search and per-book MP3 streams for private use.",
 	"icon": "https://www.vorleser.net/dist/default/media/favicons/apple-touch-icon.png",

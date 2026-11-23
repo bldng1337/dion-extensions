@@ -1,6 +1,6 @@
 {
 	"name": "librivox",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Free public domain audiobooks read by volunteers from LibriVox.",
 	"icon": "https://librivox.org/favicon.ico",
 	"tags": [

@@ -1,6 +1,6 @@
 {
 	"name": "comic-book-plus",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Read public-domain Golden Age comics (and British comics) from Comic Book Plus via its open online reader.",
 	"icon": "https://comicbookplus.com/favicon.ico",
 	"keywords": [

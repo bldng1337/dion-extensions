@@ -1,6 +1,6 @@
 {
 	"name": "wikisource",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A Dion extension",
 	"icon": "https://en.wikisource.org/favicon.ico",
 	"keywords": [

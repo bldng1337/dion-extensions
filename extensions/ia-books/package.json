@@ -1,6 +1,6 @@
 {
 	"name": "ia-books",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"desc": "Browse and read openly downloadable public-domain books from the Internet Archive's Books & Texts collection.",
 	"icon": "https://archive.org/favicon.ico",
 	"tags": [

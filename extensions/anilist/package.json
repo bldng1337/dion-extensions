@@ -1,6 +1,6 @@
 {
 	"name": "anilist",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"desc": "Bind Dion entries to AniList and track your watch/read progress.",
 	"icon": "https://anilist.co/img/icons/icon.svg",
 	"tags": [
