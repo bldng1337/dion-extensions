@@ -9,7 +9,7 @@ import type { Extension } from "@dion-js/runtime";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { makeEpub, makeMp3, PNG } from "./fixtures.ts";
+import { makeEpub, makeM4b, makeMp3, PNG } from "./fixtures.ts";
 
 /** 400 MPEG frames ≈ 10.4 s of audio, enough for a duration to be derived. */
 const TRACK_FRAMES = 400;
@@ -73,10 +73,26 @@ describe("Extension with tagged files", () => {
 				TRACK_FRAMES,
 			),
 		);
-		// 3000 frames ≈ 1.25 MB, over a 1 MB limit but under the 32 MB default.
+		// 3000 frames ≈ 1.25 MB, over a 1 MB limit but under the 512 MB default.
 		writeFileSync(
 			join(libroot, "long-track.mp3"),
 			makeMp3({ title: "A Very Long Track", artist: "Solo" }, 3000),
+		);
+		// An audiobook in one big file: its tags and Nero chapters are read out
+		// of the MP4 container, its cover from the ilst artwork slot.
+		writeFileSync(
+			join(libroot, "audio-book.m4b"),
+			makeM4b({
+				title: "A Local Audiobook",
+				artist: "The Narrator",
+				album: "Audio Edition",
+				cover: PNG,
+				durationMs: 3000,
+				chapters: [
+					{ title: "Intro", startMs: 0 },
+					{ title: "Outro", startMs: 2000 },
+				],
+			}),
 		);
 		// Two untaggable files ahead of the one tagged file, to show that the
 		// per-folder budget counts reads rather than files.
@@ -191,6 +207,37 @@ describe("Extension with tagged files", () => {
 		expect(result.source.type).toBe("Audio");
 		if (result.source.type !== "Audio") throw new Error("expected audio");
 		expect(result.source.chapters).toBeNull();
+	});
+
+	it("should read an audiobook's tags and chapters out of its m4b", async () => {
+		const { entry } = await extension.detail({ uid: "audio-book.m4b" }, {});
+		expect(entry.titles).toEqual(["A Local Audiobook"]);
+		expect(entry.author).toEqual(["The Narrator"]);
+		expect(entry.media_type).toBe("Audio");
+		expect(entry.description).toContain("2 chapters");
+		expect(entry.description).toContain("0:03");
+		// Like a book's artwork, an audiobook's cover fills both slots.
+		expect(entry.poster?.url).toBe(entry.cover?.url);
+	});
+
+	it("should hand an m4b to the player as audio with its chapters", async () => {
+		const result = await extension.source({ uid: "audio-book.m4b" }, {});
+		expect(result.source.type).toBe("Audio");
+		if (result.source.type !== "Audio") throw new Error("expected audio");
+		expect(result.source.chapters).toEqual([
+			{ title: "Intro", start: 0, end: 2, kind: null },
+			// The last chapter runs open-ended until the file's duration.
+			{ title: "Outro", start: 2, end: 3, kind: null },
+		]);
+	});
+
+	it("should serve an m4b's embedded artwork over the proxy", async () => {
+		const { entry } = await extension.detail({ uid: "audio-book.m4b" }, {});
+		const response = await fetch(entry.cover!.url!);
+		expect(response.status).toBe(200);
+		expect(response.headers.get("content-type")).toBe("image/png");
+		const bytes = new Uint8Array(await response.arrayBuffer());
+		expect(Array.from(bytes)).toEqual(Array.from(PNG));
 	});
 
 	it("should reuse the tags it already read when browsing", async () => {

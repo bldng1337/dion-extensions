@@ -7,7 +7,7 @@ import type { MediaType, Paragraph } from "@dion-js/runtime-types/runtime";
 /** Entries per browse/search page. */
 export const PAGE_SIZE = 30;
 
-export type FileKind = "epub" | "pdf" | "txt" | "mp3" | "mp4";
+export type FileKind = "epub" | "pdf" | "txt" | "mp3" | "mp4" | "m4b";
 
 /**
  * A supported file addressed relative to the library root with forward
@@ -45,6 +45,7 @@ export function kindForFilename(name: string): FileKind | null {
 	if (lower.endsWith(".txt")) return "txt";
 	if (lower.endsWith(".mp3")) return "mp3";
 	if (lower.endsWith(".mp4")) return "mp4";
+	if (lower.endsWith(".m4b")) return "m4b";
 	return null;
 }
 
@@ -53,17 +54,24 @@ export function kindForFilename(name: string): FileKind | null {
  * carries none, so there is nothing to gain by reading it whole.
  */
 export function carriesMetadata(kind: FileKind): boolean {
-	return kind === "epub" || kind === "pdf" || kind === "mp3" || kind === "mp4";
+	return (
+		kind === "epub" ||
+		kind === "pdf" ||
+		kind === "mp3" ||
+		kind === "mp4" ||
+		kind === "m4b"
+	);
 }
 
 /**
  * The runtime MediaType a set of files presents as: any video file makes an
- * entry video, otherwise any audio file makes it audio, otherwise it reads
- * as a book.
+ * entry video, otherwise any audio file (mp3 track or m4b audiobook) makes it
+ * audio, otherwise it reads as a book.
  */
 export function mediaTypeForFiles(files: ScannedFile[]): MediaType {
 	if (files.some((file) => file.kind === "mp4")) return "Video";
-	if (files.some((file) => file.kind === "mp3")) return "Audio";
+	if (files.some((file) => file.kind === "mp3" || file.kind === "m4b"))
+		return "Audio";
 	return "Book";
 }
 

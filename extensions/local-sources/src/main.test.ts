@@ -82,6 +82,7 @@ describe("naming helpers", () => {
 		expect(kindForFilename("notes.txt")).toBe("txt");
 		expect(kindForFilename("song.MP3")).toBe("mp3");
 		expect(kindForFilename("movie.mp4")).toBe("mp4");
+		expect(kindForFilename("novel.M4B")).toBe("m4b");
 		expect(kindForFilename("cover.jpg")).toBeNull();
 		expect(kindForFilename("cover")).toBeNull();
 		expect(kindForFilename("archive.zip")).toBeNull();
@@ -94,6 +95,8 @@ describe("naming helpers", () => {
 		expect(carriesMetadata("pdf")).toBe(true);
 		expect(carriesMetadata("mp3")).toBe(true);
 		expect(carriesMetadata("mp4")).toBe(true);
+		// An m4b is an MP4 container with audio, so its tags are readable too.
+		expect(carriesMetadata("m4b")).toBe(true);
 		// Nothing to read inside a plain text file.
 		expect(carriesMetadata("txt")).toBe(false);
 	});
@@ -263,7 +266,7 @@ describe("orderEpisodes", () => {
 });
 
 describe("media types", () => {
-	const of = (kind: "epub" | "pdf" | "txt" | "mp3" | "mp4") => ({
+	const of = (kind: "epub" | "pdf" | "txt" | "mp3" | "mp4" | "m4b") => ({
 		rel: `f.${kind}`,
 		title: "f",
 		kind,
@@ -273,6 +276,7 @@ describe("media types", () => {
 		expect(mediaTypeForFiles([])).toBe("Book");
 		expect(mediaTypeForFiles([of("epub"), of("txt")])).toBe("Book");
 		expect(mediaTypeForFiles([of("epub"), of("mp3")])).toBe("Audio");
+		expect(mediaTypeForFiles([of("m4b")])).toBe("Audio");
 		expect(mediaTypeForFiles([of("mp3"), of("mp4")])).toBe("Video");
 		expect(mediaTypeForFiles([of("mp4"), of("mp3"), of("epub")])).toBe("Video");
 	});

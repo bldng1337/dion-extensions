@@ -273,3 +273,146 @@ export function makeMp3(fixture: Mp3Fixture, frames = 40): Uint8Array {
 	file.set(audio, tag.length);
 	return file;
 }
+
+export type M4bFixture = {
+	title: string;
+	artist?: string;
+	album?: string;
+	cover?: Uint8Array;
+	/** Total running time in milliseconds — the mvhd duration. */
+	durationMs: number;
+	/** Nero chapter list entries; starts are milliseconds into the file. */
+	chapters?: { title: string; startMs: number }[];
+};
+
+/** ISO base media box: big-endian u32 size + fourcc + content. */
+function box(fourcc: string | number[], ...content: Uint8Array[]): Uint8Array {
+	const name =
+		typeof fourcc === "string"
+			? encoder.encode(fourcc)
+			: new Uint8Array(fourcc);
+	const out = new Uint8Array(
+		8 + content.reduce((sum, part) => sum + part.length, 0),
+	);
+	new DataView(out.buffer).setUint32(0, out.length, false);
+	out.set(name, 4);
+	let at = 8;
+	for (const part of content) {
+		out.set(part, at);
+		at += part.length;
+	}
+	return out;
+}
+
+function u32(value: number): Uint8Array {
+	const out = new Uint8Array(4);
+	new DataView(out.buffer).setUint32(0, value, false);
+	return out;
+}
+
+function u64(value: number): Uint8Array {
+	const out = new Uint8Array(8);
+	new DataView(out.buffer).setBigUint64(0, BigInt(value), false);
+	return out;
+}
+
+function u8(value: number): Uint8Array {
+	return new Uint8Array([value]);
+}
+
+/** An ilst value: type 1 is UTF-8 text, 14 a PNG cover. */
+function dataAtom(dataType: number, payload: Uint8Array): Uint8Array {
+	return box("data", u32(dataType), u32(0), payload);
+}
+
+/** Movie header v0: 1000 units per second, so ms map onto units directly. */
+function mvhd(durationMs: number): Uint8Array {
+	return box(
+		"mvhd",
+		u32(0), // version 0, flags 0
+		u32(0),
+		u32(0), // creation, modification time
+		u32(1000), // timescale
+		u32(durationMs),
+		u32(0x00010000), // rate 1.0
+		new Uint8Array([0x01, 0x00]), // volume 1.0
+		new Uint8Array(10), // reserved
+		// Unity transform matrix: 9 u32s.
+		u32(0x00010000),
+		u32(0),
+		u32(0),
+		u32(0),
+		u32(0x00010000),
+		u32(0),
+		u32(0),
+		u32(0),
+		u32(0x40000000),
+		new Uint8Array(24), // predefined
+		u32(3), // next track id
+	);
+}
+
+/** Nero chapter list: starts in 100-nanosecond units, mp4ameta's read format. */
+function chpl(chapters: { title: string; startMs: number }[]): Uint8Array {
+	const entries = chapters.flatMap((chapter) => [
+		u64(chapter.startMs * 10_000),
+		u8(encoder.encode(chapter.title).length),
+		encoder.encode(chapter.title),
+	]);
+	return box(
+		"chpl",
+		new Uint8Array([1, 0, 0, 0]), // version 1, flags 0
+		u32(0),
+		u8(chapters.length),
+		...entries,
+	);
+}
+
+function iTunesTag(name: number[], value: string): Uint8Array {
+	return box(name, dataAtom(1, encoder.encode(value)));
+}
+
+/**
+ * A minimal but real M4B: ftyp + a placeholder mdat + a moov whose mvhd
+ * carries the duration and whose udta carries the iTunes tags and the Nero
+ * chapter list — everything the runtime's metadata inspector reads. The
+ * structure mirrors what ffmpeg's `-f ipod` muxer writes.
+ */
+export function makeM4b(fixture: M4bFixture): Uint8Array {
+	const tags = [iTunesTag([0xa9, 0x6e, 0x61, 0x6d], fixture.title)];
+	if (fixture.artist !== undefined)
+		tags.push(iTunesTag([0xa9, 0x41, 0x52, 0x54], fixture.artist));
+	if (fixture.album !== undefined)
+		tags.push(iTunesTag([0xa9, 0x61, 0x6c, 0x62], fixture.album));
+	if (fixture.cover !== undefined)
+		tags.push(box("covr", dataAtom(14, fixture.cover)));
+
+	const ilst = box("ilst", ...tags);
+	// meta is a full box: version/flags precede its content.
+	const hdlr = box(
+		"hdlr",
+		u32(0),
+		u32(0),
+		encoder.encode("mdir"),
+		encoder.encode("appl"),
+		new Uint8Array(9),
+	);
+	const meta = box("meta", u32(0), hdlr, ilst);
+
+	const ftyp = box(
+		"ftyp",
+		encoder.encode("M4B "),
+		u32(512),
+		encoder.encode("M4B "),
+		encoder.encode("isom"),
+		encoder.encode("iso2"),
+	);
+	const mdat = box("mdat", new Uint8Array(16));
+	const moov = box(
+		"moov",
+		mvhd(fixture.durationMs),
+		box("udta", meta, chpl(fixture.chapters ?? [])),
+	);
+
+	return new Uint8Array([...ftyp, ...mdat, ...moov]);
+}

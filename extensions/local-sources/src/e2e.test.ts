@@ -24,6 +24,7 @@ describe("Extension with a configured library folder", () => {
 		writeFileSync(join(libroot, "notes.txt"), "hello");
 		writeFileSync(join(libroot, "Song.mp3"), "x");
 		writeFileSync(join(libroot, "Clip.mp4"), "x");
+		writeFileSync(join(libroot, "Book.m4b"), "x");
 		writeFileSync(join(libroot, "cover.jpg"), "x"); // unsupported, ignored
 		const series = mkdirSync(join(libroot, "Series"), { recursive: true });
 		writeFileSync(join(series!, "Chapter 1.epub"), "x");
@@ -51,6 +52,7 @@ describe("Extension with a configured library folder", () => {
 	it("should browse the configured folder", async () => {
 		const result = (await extension.browse(0, {})).entries;
 		expect(result.content.map((entry) => entry.title).sort()).toEqual([
+			"Book",
 			"Clip",
 			"Series",
 			"Song",
@@ -63,6 +65,8 @@ describe("Extension with a configured library folder", () => {
 		expect(byTitle.get("Song")).toBe("Audio");
 		expect(byTitle.get("Clip")).toBe("Video");
 		expect(byTitle.get("Standalone")).toBe("Book");
+		// An m4b is an audiobook, so it presents as audio rather than video.
+		expect(byTitle.get("Book")).toBe("Audio");
 	});
 
 	it("should accept forward-slash paths too", async () => {
@@ -71,7 +75,7 @@ describe("Extension with a configured library folder", () => {
 			data: libroot.replaceAll("\\", "/"),
 		});
 		const result = (await extension.browse(0, {})).entries;
-		expect(result.content.length).toBe(5);
+		expect(result.content.length).toBe(6);
 	});
 
 	it("should serve mp3 and mp4 files as audio and video sources", async () => {
@@ -114,9 +118,30 @@ describe("Extension with a configured library folder", () => {
 			chapters: null,
 		});
 
+		// An m4b rides the audio path like an mp3: a stream source with its
+		// container's chapters, of which an untagged stub has none.
+		const audiobook = await extension.source({ uid: "Book.m4b" }, {});
+		expect(audiobook.source).toEqual({
+			type: "Audio",
+			sources: [
+				{
+					name: "Local",
+					lang: "",
+					url: {
+						url: pathToFileUrl(join(libroot, "Book.m4b")),
+						header: null,
+					},
+				},
+			],
+			chapters: null,
+		});
+
 		const song = await extension.detail({ uid: "Song.mp3" }, {});
 		expect(song.entry.media_type).toBe("Audio");
 		const clip = await extension.detail({ uid: "Clip.mp4" }, {});
 		expect(clip.entry.media_type).toBe("Video");
+		const book = await extension.detail({ uid: "Book.m4b" }, {});
+		expect(book.entry.media_type).toBe("Audio");
+		expect(book.entry.description).toContain("M4B file");
 	});
 });

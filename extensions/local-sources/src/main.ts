@@ -130,11 +130,11 @@ export default class extends DionExtension implements SourceProvider {
 			),
 		metadataSize: new ExtensionSetting<number>(
 			METADATA_SIZE_SETTING_ID,
-			32,
+			512,
 			"Extension",
 		)
 			.setLabel("Largest file read (MB)")
-			.setUI(new Slider(1, 512, 1)),
+			.setUI(new Slider(1, 2048, 1)),
 	};
 	accounts = {};
 	entrySettings = {};
@@ -568,7 +568,8 @@ export default class extends DionExtension implements SourceProvider {
 					settings: { ...settings },
 				};
 			case "mp3":
-			case "mp4": {
+			case "mp4":
+			case "m4b": {
 				// Chapters live in the container's tags, so the file has to be
 				// read to know about them. Books and texts above never touch it.
 				const metas = await this.#metas(
@@ -580,9 +581,9 @@ export default class extends DionExtension implements SourceProvider {
 				const source = { name: "Local", lang: "", url };
 				return {
 					source:
-						kind === "mp3"
-							? { type: "Audio", sources: [source], chapters }
-							: { type: "Video", sources: [source], sub: [], chapters },
+						kind === "mp4"
+							? { type: "Video", sources: [source], sub: [], chapters }
+							: { type: "Audio", sources: [source], chapters },
 					settings: { ...settings },
 				};
 			}
